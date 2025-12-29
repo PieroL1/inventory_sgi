@@ -180,11 +180,14 @@
 }
 
 /*
- * Fix para Radix UI Dropdown - forzar visibilidad del contenido
- * El problema es que las animaciones de tw-animate-css interfieren con Radix
+ * Fix para Radix UI Dropdown Menu
+ * Asegura que el contenido del dropdown sea visible y clickeable
  */
 [data-radix-popper-content-wrapper] {
-  z-index: 9999 !important;
-  opacity: 1 !important;
+  z-index: 50 !important;
+}
+
+/* Asegura que el contenido del dropdown menu sea interactivo */
+[data-slot="dropdown-menu-content"] {
   pointer-events: auto !important;
 }

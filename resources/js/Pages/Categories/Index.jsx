@@ -121,23 +121,24 @@ export default function Index({ categories }) {
                                                 <TableCell className="text-right">
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger asChild>
-                                                            <Button variant="ghost" size="icon">
+                                                            <button
+                                                                type="button"
+                                                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                                                            >
                                                                 <MoreHorizontal className="h-4 w-4" />
-                                                            </Button>
+                                                                <span className="sr-only">Abrir menú</span>
+                                                            </button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end">
-                                                            <DropdownMenuItem asChild>
-                                                                <Link
-                                                                    href={route('categories.edit', category.id)}
-                                                                    className="flex items-center gap-2"
-                                                                >
-                                                                    <Pencil className="h-4 w-4" />
-                                                                    Editar
-                                                                </Link>
+                                                            <DropdownMenuItem
+                                                                onClick={() => router.visit(route('categories.edit', category.id))}
+                                                            >
+                                                                <Pencil className="h-4 w-4 mr-2" />
+                                                                Editar
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem
+                                                                variant="destructive"
                                                                 onClick={() => handleDelete(category)}
-                                                                className="text-red-600 focus:text-red-600"
                                                             >
                                                                 <Trash2 className="h-4 w-4 mr-2" />
                                                                 Eliminar
