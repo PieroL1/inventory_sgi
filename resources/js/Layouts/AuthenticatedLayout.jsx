@@ -1,4 +1,5 @@
 import { useFlashMessages } from '@/hooks/useFlashMessages';
+import { useTheme } from '@/hooks/useTheme';
 import { Link, usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import {
@@ -16,6 +17,9 @@ import {
     AlertTriangle,
     PanelLeftClose,
     PanelLeft,
+    Sun,
+    Moon,
+    Monitor,
 } from 'lucide-react';
 import {
     DropdownMenu,
@@ -35,6 +39,7 @@ export default function AuthenticatedLayout({ header, children }) {
     const lowStockCount = alerts?.lowStockCount || 0;
     const lowStockProducts = alerts?.lowStockProducts || [];
     useFlashMessages();
+    const { theme, toggleTheme, setLightTheme, setDarkTheme, setSystemTheme, isDark } = useTheme();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     
@@ -146,6 +151,30 @@ export default function AuthenticatedLayout({ header, children }) {
                                         Mi Perfil
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
+                                    <div className="px-2 py-1.5">
+                                        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mb-2">Tema</p>
+                                        <div className="flex gap-1">
+                                            <button
+                                                onClick={setLightTheme}
+                                                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                                    theme === 'light' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                                }`}
+                                            >
+                                                <Sun className="h-3.5 w-3.5" />
+                                                Claro
+                                            </button>
+                                            <button
+                                                onClick={setDarkTheme}
+                                                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                                    theme === 'dark' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                                }`}
+                                            >
+                                                <Moon className="h-3.5 w-3.5" />
+                                                Oscuro
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <DropdownMenuSeparator />
                                     <DropdownMenuItem
                                         onClick={() => {
                                             const form = document.createElement('form');
@@ -159,7 +188,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             document.body.appendChild(form);
                                             form.submit();
                                         }}
-                                        className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                                        className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
                                     >
                                         <LogOut className="h-4 w-4" />
                                         Cerrar Sesión
@@ -281,6 +310,30 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Mi Perfil
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
+                                <div className="px-2 py-1.5">
+                                    <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mb-2">Tema</p>
+                                    <div className="flex gap-1">
+                                        <button
+                                            onClick={setLightTheme}
+                                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                                theme === 'light' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                            }`}
+                                        >
+                                            <Sun className="h-3.5 w-3.5" />
+                                            Claro
+                                        </button>
+                                        <button
+                                            onClick={setDarkTheme}
+                                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                                theme === 'dark' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                            }`}
+                                        >
+                                            <Moon className="h-3.5 w-3.5" />
+                                            Oscuro
+                                        </button>
+                                    </div>
+                                </div>
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                     onClick={() => {
                                         const form = document.createElement('form');
@@ -294,7 +347,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         document.body.appendChild(form);
                                         form.submit();
                                     }}
-                                    className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                                    className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
                                 >
                                     <LogOut className="h-4 w-4" />
                                     Cerrar Sesión
@@ -308,12 +361,12 @@ export default function AuthenticatedLayout({ header, children }) {
             {/* Contenido principal */}
             <div className={`${contentMargin} relative transition-all duration-300`}>
                 {/* Top bar */}
-                <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-gray-200/50">
+                <header className="sticky top-0 z-40 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50">
                     <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
                         {/* Botón menú móvil */}
                         <button
                             onClick={() => setSidebarOpen(true)}
-                            className="lg:hidden p-2 -ml-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors shrink-0"
+                            className="lg:hidden p-2 -ml-2 rounded-xl text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0"
                         >
                             <Menu className="h-6 w-6" />
                         </button>
@@ -321,7 +374,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         {/* Título de página */}
                         <div className="flex-1 min-w-0">
                             {header && (
-                                <div className="text-lg font-semibold text-gray-900 truncate">
+                                <div className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
                                     {header}
                                 </div>
                             )}
@@ -332,20 +385,20 @@ export default function AuthenticatedLayout({ header, children }) {
                             {/* Notificaciones */}
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <button className="relative p-2 sm:p-2.5 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <button className="relative p-2 sm:p-2.5 rounded-xl text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                                         <Bell className="h-5 w-5" />
                                         {lowStockCount > 0 && (
-                                            <span className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+                                            <span className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white ring-2 ring-white dark:ring-gray-900">
                                                 {lowStockCount > 9 ? '9+' : lowStockCount}
                                             </span>
                                         )}
                                     </button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-80">
-                                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                                        <p className="text-sm font-semibold text-gray-900">Notificaciones</p>
+                                    <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Notificaciones</p>
                                         {lowStockCount > 0 && (
-                                            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-100 px-2 text-xs font-medium text-amber-700">
+                                            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/50 px-2 text-xs font-medium text-amber-700 dark:text-amber-400">
                                                 {lowStockCount}
                                             </span>
                                         )}
@@ -353,31 +406,31 @@ export default function AuthenticatedLayout({ header, children }) {
                                     {lowStockProducts.length > 0 ? (
                                         <div className="py-2 max-h-80 overflow-y-auto">
                                             <div className="px-4 py-2">
-                                                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Stock Bajo</p>
+                                                <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">Stock Bajo</p>
                                             </div>
                                             {lowStockProducts.map((product) => (
                                                 <Link
                                                     key={product.id}
                                                     href={route('stock-movements.create') + `?product_id=${product.id}`}
-                                                    className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                                                    className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                                 >
-                                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100">
-                                                        <AlertTriangle className="h-4 w-4 text-amber-600" />
+                                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/50">
+                                                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                                                     </div>
                                                     <div className="flex-1 min-w-0">
-                                                        <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
-                                                        <p className="text-xs text-gray-500">{product.sku}</p>
-                                                        <p className="text-xs text-amber-600 font-medium mt-0.5">
+                                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{product.name}</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{product.sku}</p>
+                                                        <p className="text-xs text-amber-600 dark:text-amber-400 font-medium mt-0.5">
                                                             Stock: {product.stock_quantity} / Mín: {product.min_stock}
                                                         </p>
                                                     </div>
                                                 </Link>
                                             ))}
                                             {lowStockCount > 5 && (
-                                                <div className="px-4 py-2 border-t border-gray-100">
+                                                <div className="px-4 py-2 border-t border-gray-100 dark:border-gray-800">
                                                     <Link
                                                         href={route('products.index') + '?low_stock=1'}
-                                                        className="text-xs text-primary-600 hover:text-primary-700 font-medium"
+                                                        className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
                                                     >
                                                         Ver todos los {lowStockCount} productos →
                                                     </Link>
@@ -386,11 +439,11 @@ export default function AuthenticatedLayout({ header, children }) {
                                         </div>
                                     ) : (
                                         <div className="py-6 px-4 text-center">
-                                            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-emerald-100 mb-3">
-                                                <Package className="h-6 w-6 text-emerald-600" />
+                                            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50 mb-3">
+                                                <Package className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                                             </div>
-                                            <p className="text-sm font-medium text-gray-900">¡Todo en orden!</p>
-                                            <p className="text-xs text-gray-500 mt-1">No hay productos con stock bajo</p>
+                                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">¡Todo en orden!</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">No hay productos con stock bajo</p>
                                         </div>
                                     )}
                                 </DropdownMenuContent>
@@ -399,18 +452,18 @@ export default function AuthenticatedLayout({ header, children }) {
                             {/* Menú de usuario (top bar) */}
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <button className="flex items-center gap-2 p-1.5 sm:p-2 rounded-xl text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <button className="flex items-center gap-2 p-1.5 sm:p-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                                         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-white font-medium text-sm">
                                             {user.name.charAt(0).toUpperCase()}
                                         </div>
                                         <span className="text-sm font-medium hidden sm:block max-w-24 truncate">{user.name}</span>
-                                        <ChevronDown className="h-4 w-4 text-gray-400 hidden sm:block" />
+                                        <ChevronDown className="h-4 w-4 text-gray-400 dark:text-gray-500 hidden sm:block" />
                                     </button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-56">
-                                    <div className="px-4 py-3 border-b border-gray-100">
-                                        <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                    <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{user.name}</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
                                     </div>
                                     <DropdownMenuItem
                                         onClick={() => window.location.href = route('profile.edit')}
@@ -419,6 +472,30 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <User className="h-4 w-4" />
                                         Mi Perfil
                                     </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <div className="px-2 py-1.5">
+                                        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mb-2">Tema</p>
+                                        <div className="flex gap-1">
+                                            <button
+                                                onClick={setLightTheme}
+                                                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                                    theme === 'light' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                                }`}
+                                            >
+                                                <Sun className="h-3.5 w-3.5" />
+                                                Claro
+                                            </button>
+                                            <button
+                                                onClick={setDarkTheme}
+                                                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                                    theme === 'dark' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                                }`}
+                                            >
+                                                <Moon className="h-3.5 w-3.5" />
+                                                Oscuro
+                                            </button>
+                                        </div>
+                                    </div>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
                                         onClick={() => {
@@ -433,7 +510,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             document.body.appendChild(form);
                                             form.submit();
                                         }}
-                                        className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                                        className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
                                     >
                                         <LogOut className="h-4 w-4" />
                                         Cerrar Sesión

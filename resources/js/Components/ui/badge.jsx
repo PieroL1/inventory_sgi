@@ -10,17 +10,17 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary/10 text-primary-700 [a&]:hover:bg-primary/20",
+          "border-transparent bg-primary/10 dark:bg-primary/20 text-primary-700 dark:text-primary-300 [a&]:hover:bg-primary/20",
         secondary:
-          "border-gray-200 bg-gray-50 text-gray-600 [a&]:hover:bg-gray-100",
+          "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 [a&]:hover:bg-gray-100 dark:[a&]:hover:bg-gray-700",
         destructive:
-          "border-transparent bg-red-50 text-red-600 [a&]:hover:bg-red-100",
+          "border-transparent bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 [a&]:hover:bg-red-100 dark:[a&]:hover:bg-red-900",
         outline:
-          "border-gray-200 text-gray-600 bg-white/50 [a&]:hover:bg-gray-50",
+          "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 bg-white/50 dark:bg-gray-800/50 [a&]:hover:bg-gray-50 dark:[a&]:hover:bg-gray-700",
         success:
-          "border-transparent bg-emerald-50 text-emerald-600 [a&]:hover:bg-emerald-100",
+          "border-transparent bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 [a&]:hover:bg-emerald-100 dark:[a&]:hover:bg-emerald-900",
         warning:
-          "border-transparent bg-amber-50 text-amber-600 [a&]:hover:bg-amber-100",
+          "border-transparent bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 [a&]:hover:bg-amber-100 dark:[a&]:hover:bg-amber-900",
       },
     },
     defaultVariants: {

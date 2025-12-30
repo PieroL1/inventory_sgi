@@ -187,11 +187,11 @@
 
 /* Efecto glassmorphism para cards */
 .glass {
-    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl shadow-black/5;
+    @apply bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border border-white/20 dark:border-gray-700/30 shadow-xl shadow-black/5;
 }
 
 .glass-card {
-    @apply bg-white/80 backdrop-blur-xl border border-white/30 shadow-lg shadow-primary-500/5;
+    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-white/30 dark:border-gray-700/30 shadow-lg shadow-primary-500/5 dark:shadow-primary-500/10;
 }
 
 /* Gradiente de fondo principal */
@@ -200,6 +200,13 @@
         radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.90 0.08 250 / 30%), transparent),
         radial-gradient(ellipse 60% 40% at 100% 100%, oklch(0.92 0.06 320 / 20%), transparent),
         oklch(0.98 0.005 250);
+}
+
+.dark .bg-gradient-main {
+    background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.30 0.10 250 / 30%), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, oklch(0.25 0.08 320 / 20%), transparent),
+        oklch(0.13 0.02 250);
 }
 
 /* Sombras personalizadas */

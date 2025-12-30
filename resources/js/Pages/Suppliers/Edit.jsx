@@ -33,7 +33,7 @@ export default function Edit({ supplier }) {
                             <ArrowLeft className="h-5 w-5" />
                         </Button>
                     </Link>
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-100">
                         Editar Proveedor
                     </h2>
                 </div>
@@ -46,7 +46,7 @@ export default function Edit({ supplier }) {
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <UserCog className="h-5 w-5 text-primary-600" />
+                                <UserCog className="h-5 w-5 text-primary-600 dark:text-primary-400" />
                                 Editar: {supplier.name}
                             </CardTitle>
                             <CardDescription>

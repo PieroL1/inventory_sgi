@@ -102,7 +102,7 @@ Sistema monolítico modular para **control de stock, proveedores, movimientos de
 |-------|-------|
 | **Fase actual** | Fase 3: Lógica de Inventario |
 | **Rama Git activa** | `feature/fase-3-inventario` |
-| **Última actualización** | 2025-12-30 - Movimientos de stock implementados |
+| **Última actualización** | 2025-12-30 - Modo oscuro implementado, sidebar colapsable, mejoras responsive |
 | **Bloqueadores** | Ninguno |
 
 ### 5.1 Estrategia de Ramas Git
@@ -213,6 +213,9 @@ Sistema monolítico modular para **control de stock, proveedores, movimientos de
 - [x] Validación de stock negativo en salidas.
 - [x] Enlace "Movimientos" en navegación con icono ArrowLeftRight.
 - [x] Alertas de stock bajo (cuando `stock_quantity < min_stock`).
+- [x] Sidebar colapsable en desktop con persistencia en localStorage.
+- [x] Mejoras responsive para móvil y tablet.
+- [x] **Modo Oscuro (Dark Mode)** completo con toggle en menú de usuario.
 
 **Bitácora F3:**
 - (30-dic) Creada migración `stock_movements` con índices en product_id, user_id, type, created_at.
@@ -235,6 +238,25 @@ Sistema monolítico modular para **control de stock, proveedores, movimientos de
   - **Notificaciones en ícono de campana:** Dropdown con lista de hasta 5 productos con stock bajo, cada uno con enlace directo para agregar movimiento. Badge con contador en el ícono.
   - **Toasts mejorados:** Configuración de Sonner con `expand={true}` para que los toasts se apilen verticalmente sin superponerse.
 - (30-dic) **FASE 3 COMPLETADA**
+- (30-dic) **Sidebar colapsable implementado:**
+  - Botón "Colapsar" en sidebar que reduce el ancho de 72 a 20 (solo iconos).
+  - Estado persistido en localStorage para mantener preferencia del usuario.
+  - Iconos PanelLeftClose/PanelLeft de lucide-react.
+  - Badges de stock bajo se muestran como indicador pequeño cuando está colapsado.
+- (30-dic) **Mejoras responsive:**
+  - Sidebar móvil con altura completa (fixed inset-y-0).
+  - Headers de páginas con truncate y textos responsive (hidden sm:inline).
+  - Filtros en grid responsive para tablets (648-699px).
+- (30-dic) **MODO OSCURO (DARK MODE) IMPLEMENTADO:**
+  - Hook `useTheme` creado en `/hooks/useTheme.js` con persistencia en localStorage.
+  - Toggle de tema en menú de usuario (sidebar, móvil y top bar) con botones Claro/Oscuro.
+  - Variables CSS ya configuradas en `app.css` para `:root` (claro) y `.dark` (oscuro).
+  - Componentes actualizados con clases `dark:`: Card, Badge, Table, Input, Button, Select, Textarea, Label, DropdownMenu.
+  - Todas las páginas Index (Dashboard, Categories, Suppliers, Products, StockMovements) con soporte dark.
+  - Formularios Create/Edit con headers adaptados.
+  - Glassmorphism adaptado: `.glass` y `.glass-card` con variantes dark.
+  - Gradiente de fondo `.bg-gradient-main` con versión oscura.
+  - Sidebar mantiene diseño oscuro en ambos modos (contraste consistente como apps profesionales).
 
 ---
 

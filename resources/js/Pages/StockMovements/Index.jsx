@@ -141,8 +141,8 @@ export default function Index({ movements, products, types, filters }) {
                             <ArrowLeftRight className="h-5 w-5 text-white" />
                         </div>
                         <div className="min-w-0">
-                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Movimientos de Stock</h1>
-                            <p className="text-xs sm:text-sm text-gray-500">{movements.total} registros</p>
+                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">Movimientos de Stock</h1>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{movements.total} registros</p>
                         </div>
                     </div>
                     <Link href={route('stock-movements.create')} className="shrink-0">
@@ -227,13 +227,13 @@ export default function Index({ movements, products, types, filters }) {
 
                     {movements.data.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 mb-4">
-                                <ArrowLeftRight className="h-8 w-8 text-gray-400" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800 mb-4">
+                                <ArrowLeftRight className="h-8 w-8 text-gray-400 dark:text-gray-500" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                 {hasFilters ? 'No se encontraron movimientos' : 'No hay movimientos'}
                             </h3>
-                            <p className="mt-1 text-sm text-gray-500 max-w-sm">
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-sm">
                                 {hasFilters
                                     ? 'Intenta con otros filtros.'
                                     : 'Comienza registrando tu primer movimiento de stock.'}
@@ -248,10 +248,10 @@ export default function Index({ movements, products, types, filters }) {
                             )}
                         </div>
                     ) : (
-                        <div className="rounded-xl border border-gray-100 overflow-hidden">
+                        <div className="rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="bg-gray-50/50">
+                                    <TableRow className="bg-gray-50/50 dark:bg-gray-800/50">
                                         <TableHead className="w-44">Fecha</TableHead>
                                         <TableHead>Producto</TableHead>
                                         <TableHead className="text-center">Tipo</TableHead>
@@ -263,15 +263,15 @@ export default function Index({ movements, products, types, filters }) {
                                 <TableBody>
                                     {movements.data.map((movement) => (
                                         <TableRow key={movement.id}>
-                                            <TableCell className="text-sm text-gray-600">
+                                            <TableCell className="text-sm text-gray-600 dark:text-gray-300">
                                                 {formatDate(movement.created_at)}
                                             </TableCell>
                                             <TableCell>
                                                 <div>
-                                                    <p className="font-medium text-gray-900">
+                                                    <p className="font-medium text-gray-900 dark:text-gray-100">
                                                         {movement.product?.name}
                                                     </p>
-                                                    <p className="text-xs text-gray-500 font-mono">
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 font-mono">
                                                         {movement.product?.sku}
                                                     </p>
                                                 </div>
@@ -293,10 +293,10 @@ export default function Index({ movements, products, types, filters }) {
                                                     {movement.quantity}
                                                 </span>
                                             </TableCell>
-                                            <TableCell className="text-sm text-gray-600 max-w-xs truncate">
-                                                {movement.reason || <span className="text-gray-400 italic">Sin razón</span>}
+                                            <TableCell className="text-sm text-gray-600 dark:text-gray-300 max-w-xs truncate">
+                                                {movement.reason || <span className="text-gray-400 dark:text-gray-500 italic">Sin razón</span>}
                                             </TableCell>
-                                            <TableCell className="text-sm text-gray-600">
+                                            <TableCell className="text-sm text-gray-600 dark:text-gray-300">
                                                 {movement.user?.name}
                                             </TableCell>
                                         </TableRow>
@@ -308,8 +308,8 @@ export default function Index({ movements, products, types, filters }) {
 
                     {/* Paginación */}
                     {movements.last_page > 1 && (
-                        <div className="flex items-center justify-between mt-6 pt-4 border-t">
-                            <p className="text-sm text-gray-500">
+                        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
                                 Mostrando {movements.from} a {movements.to} de {movements.total} resultados
                             </p>
                             <div className="flex items-center gap-2">

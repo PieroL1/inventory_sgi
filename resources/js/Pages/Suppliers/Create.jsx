@@ -33,7 +33,7 @@ export default function Create() {
                             <ArrowLeft className="h-5 w-5" />
                         </Button>
                     </Link>
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-100">
                         Nuevo Proveedor
                     </h2>
                 </div>
@@ -46,7 +46,7 @@ export default function Create() {
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <UserPlus className="h-5 w-5 text-primary-600" />
+                                <UserPlus className="h-5 w-5 text-primary-600 dark:text-primary-400" />
                                 Crear Proveedor
                             </CardTitle>
                             <CardDescription>

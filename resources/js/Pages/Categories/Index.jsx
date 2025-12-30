@@ -92,8 +92,8 @@ export default function Index({ categories, filters }) {
                             <FolderTree className="h-5 w-5 text-white" />
                         </div>
                         <div className="min-w-0">
-                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Categorías</h1>
-                            <p className="text-xs sm:text-sm text-gray-500">{categories.total} registros</p>
+                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">Categorías</h1>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{categories.total} registros</p>
                         </div>
                     </div>
                     <Link href={route('categories.create')} className="shrink-0">
@@ -155,13 +155,13 @@ export default function Index({ categories, filters }) {
 
                     {categories.data.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 mb-4">
-                                <FolderTree className="h-8 w-8 text-gray-400" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800 mb-4">
+                                <FolderTree className="h-8 w-8 text-gray-400 dark:text-gray-500" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                 {hasFilters ? 'No se encontraron categorías' : 'No hay categorías'}
                             </h3>
-                            <p className="mt-1 text-sm text-gray-500 max-w-sm">
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-sm">
                                 {hasFilters
                                     ? 'Intenta con otros términos de búsqueda o ajusta los filtros.'
                                     : 'Comienza creando tu primera categoría para organizar tus productos.'}
@@ -176,10 +176,10 @@ export default function Index({ categories, filters }) {
                             )}
                         </div>
                     ) : (
-                        <div className="rounded-xl border border-gray-100 overflow-hidden">
+                        <div className="rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="bg-gray-50/50">
+                                    <TableRow className="bg-gray-50/50 dark:bg-gray-800/50">
                                         <TableHead>Nombre</TableHead>
                                         <TableHead>Descripción</TableHead>
                                         <TableHead>Categoría Padre</TableHead>
@@ -191,10 +191,10 @@ export default function Index({ categories, filters }) {
                                 <TableBody>
                                     {categories.data.map((category) => (
                                         <TableRow key={category.id}>
-                                            <TableCell className="font-medium text-gray-900">
+                                            <TableCell className="font-medium text-gray-900 dark:text-gray-100">
                                                 {category.name}
                                             </TableCell>
-                                            <TableCell className="text-gray-500 max-w-xs truncate">
+                                            <TableCell className="text-gray-500 dark:text-gray-400 max-w-xs truncate">
                                                 {category.description || '—'}
                                             </TableCell>
                                             <TableCell>
@@ -203,7 +203,7 @@ export default function Index({ categories, filters }) {
                                                         {category.parent.name}
                                                     </Badge>
                                                 ) : (
-                                                    <span className="text-gray-400 text-sm">Principal</span>
+                                                    <span className="text-gray-400 dark:text-gray-500 text-sm">Principal</span>
                                                 )}
                                             </TableCell>
                                             <TableCell className="text-center">
@@ -221,7 +221,7 @@ export default function Index({ categories, filters }) {
                                                     <DropdownMenuTrigger asChild>
                                                         <button
                                                             type="button"
-                                                            className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+                                                            className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                                                         >
                                                             <MoreHorizontal className="h-4 w-4" />
                                                             <span className="sr-only">Abrir menú</span>
@@ -254,9 +254,9 @@ export default function Index({ categories, filters }) {
 
                     {/* Paginación */}
                     {categories.total > 0 && (
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-100">
-                            <p className="text-sm text-gray-500">
-                                Mostrando <span className="font-medium text-gray-700">{categories.from}</span> a <span className="font-medium text-gray-700">{categories.to}</span> de <span className="font-medium text-gray-700">{categories.total}</span> resultados
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-100 dark:border-gray-800">
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Mostrando <span className="font-medium text-gray-700 dark:text-gray-300">{categories.from}</span> a <span className="font-medium text-gray-700 dark:text-gray-300">{categories.to}</span> de <span className="font-medium text-gray-700 dark:text-gray-300">{categories.total}</span> resultados
                             </p>
                             {categories.last_page > 1 && (
                                 <div className="flex items-center gap-1">
