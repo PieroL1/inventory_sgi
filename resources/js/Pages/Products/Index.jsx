@@ -26,7 +26,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Plus, MoreHorizontal, Pencil, Trash2, Package, AlertTriangle, Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, MoreHorizontal, Pencil, Trash2, Package, AlertTriangle, Search, X, ChevronLeft, ChevronRight, Eye, Download } from 'lucide-react';
 
 /**
  * Página de listado de productos.
@@ -129,13 +129,30 @@ export default function Index({ products, categories, suppliers, filters }) {
                             <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{products.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('products.create')} className="shrink-0">
-                        <Button className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            <span className="hidden sm:inline">Nuevo Producto</span>
-                            <span className="sm:hidden">Nuevo</span>
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2 shrink-0">
+                        <a
+                            href={route('export.products', {
+                                search: filters.search || undefined,
+                                category: filters.category || undefined,
+                                supplier: filters.supplier || undefined,
+                                status: filters.status !== '' ? filters.status : undefined,
+                                low_stock: filters.low_stock || undefined,
+                            })}
+                            className="hidden sm:block"
+                        >
+                            <Button variant="outline" className="gap-2">
+                                <Download className="h-4 w-4" />
+                                Exportar CSV
+                            </Button>
+                        </a>
+                        <Link href={route('products.create')}>
+                            <Button className="gap-2">
+                                <Plus className="h-4 w-4" />
+                                <span className="hidden sm:inline">Nuevo Producto</span>
+                                <span className="sm:hidden">Nuevo</span>
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
             }
         >
@@ -277,8 +294,13 @@ export default function Index({ products, categories, suppliers, filters }) {
                                                 <TableCell className="font-mono text-sm text-gray-600">
                                                     {product.sku}
                                                 </TableCell>
-                                                <TableCell className="font-medium text-gray-900 dark:text-gray-100">
-                                                    {product.name}
+                                                <TableCell className="font-medium">
+                                                    <Link
+                                                        href={route('products.show', product.id)}
+                                                        className="text-gray-900 dark:text-gray-100 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+                                                    >
+                                                        {product.name}
+                                                    </Link>
                                                 </TableCell>
                                                 <TableCell>
                                                     {product.category ? (
@@ -325,6 +347,13 @@ export default function Index({ products, categories, suppliers, filters }) {
                                                             </button>
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end" className="w-48">
+                                                            <DropdownMenuItem
+                                                                onClick={() => router.visit(route('products.show', product.id))}
+                                                                className="gap-2"
+                                                            >
+                                                                <Eye className="h-4 w-4" />
+                                                                Ver detalle
+                                                            </DropdownMenuItem>
                                                             <DropdownMenuItem
                                                                 onClick={() => router.visit(route('products.edit', product.id))}
                                                                 className="gap-2"

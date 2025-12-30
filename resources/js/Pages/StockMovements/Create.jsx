@@ -126,7 +126,7 @@ export default function Create({ products, types, preselectedProduct }) {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Selección de Producto */}
                                 <div>
-                                    <h3 className="text-sm font-medium text-gray-700 mb-4">
+                                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
                                         Producto
                                     </h3>
                                     <div className="space-y-2">
@@ -150,7 +150,7 @@ export default function Create({ products, types, preselectedProduct }) {
 
                                 {/* Tipo de Movimiento */}
                                 <div>
-                                    <h3 className="text-sm font-medium text-gray-700 mb-4">
+                                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
                                         Tipo de Movimiento
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -161,15 +161,15 @@ export default function Create({ products, types, preselectedProduct }) {
                                                 onClick={() => setData('type', value)}
                                                 className={`p-4 rounded-xl border-2 transition-all duration-200 text-left ${
                                                     data.type === value
-                                                        ? 'border-primary-500 bg-primary-50 ring-2 ring-primary-500/20'
-                                                        : 'border-gray-200 hover:border-gray-300 bg-white'
+                                                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-950 ring-2 ring-primary-500/20'
+                                                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800'
                                                 }`}
                                             >
                                                 <div className="flex items-center gap-3 mb-2">
                                                     {getTypeIcon(value)}
-                                                    <span className="font-medium text-gray-900">{label}</span>
+                                                    <span className="font-medium text-gray-900 dark:text-gray-100">{label}</span>
                                                 </div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">
                                                     {getTypeDescription(value)}
                                                 </p>
                                             </button>
@@ -184,7 +184,7 @@ export default function Create({ products, types, preselectedProduct }) {
 
                                 {/* Cantidad */}
                                 <div>
-                                    <h3 className="text-sm font-medium text-gray-700 mb-4">
+                                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
                                         Cantidad
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -215,25 +215,25 @@ export default function Create({ products, types, preselectedProduct }) {
                                         {selectedProduct && data.quantity && data.type && (
                                             <div className={`p-4 rounded-xl border ${
                                                 willBeNegative 
-                                                    ? 'bg-red-50 border-red-200' 
-                                                    : 'bg-emerald-50 border-emerald-200'
+                                                    ? 'bg-red-50 dark:bg-red-950/50 border-red-200 dark:border-red-800' 
+                                                    : 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-200 dark:border-emerald-800'
                                             }`}>
-                                                <p className="text-sm font-medium text-gray-700 mb-2">
+                                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                     Stock proyectado
                                                 </p>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-gray-500">
+                                                    <span className="text-gray-500 dark:text-gray-400">
                                                         {selectedProduct.stock_quantity}
                                                     </span>
-                                                    <span className="text-gray-400">→</span>
+                                                    <span className="text-gray-400 dark:text-gray-500">→</span>
                                                     <span className={`text-2xl font-bold ${
-                                                        willBeNegative ? 'text-red-600' : 'text-emerald-600'
+                                                        willBeNegative ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'
                                                     }`}>
                                                         {projectedStock}
                                                     </span>
                                                 </div>
                                                 {willBeNegative && (
-                                                    <div className="flex items-center gap-2 mt-2 text-red-600 text-sm">
+                                                    <div className="flex items-center gap-2 mt-2 text-red-600 dark:text-red-400 text-sm">
                                                         <AlertTriangle className="h-4 w-4" />
                                                         <span>El stock no puede ser negativo</span>
                                                     </div>

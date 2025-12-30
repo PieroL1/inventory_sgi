@@ -2,7 +2,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import {
     Table,
@@ -23,15 +22,16 @@ import {
 import {
     Plus,
     ArrowLeftRight,
-    Search,
     X,
     ChevronLeft,
     ChevronRight,
     ArrowUpCircle,
     ArrowDownCircle,
     RefreshCw,
-    Calendar,
+    Download,
 } from 'lucide-react';
+import { DatePicker } from '@/Components/DatePicker';
+import { ProductFilterCombobox } from '@/Components/ProductFilterCombobox';
 
 /**
  * Página de listado de movimientos de stock.
@@ -74,9 +74,8 @@ export default function Index({ movements, products, types, filters }) {
     };
 
     const handleProductChange = (value) => {
-        const newValue = value === 'all' ? '' : value;
-        setProduct(newValue);
-        applyFilters({ product: newValue });
+        setProduct(value);
+        applyFilters({ product: value });
     };
 
     const handleTypeChange = (value) => {
@@ -85,16 +84,14 @@ export default function Index({ movements, products, types, filters }) {
         applyFilters({ type: newValue });
     };
 
-    const handleDateFromChange = (e) => {
-        const newValue = e.target.value;
-        setDateFrom(newValue);
-        applyFilters({ date_from: newValue });
+    const handleDateFromChange = (value) => {
+        setDateFrom(value);
+        applyFilters({ date_from: value });
     };
 
-    const handleDateToChange = (e) => {
-        const newValue = e.target.value;
-        setDateTo(newValue);
-        applyFilters({ date_to: newValue });
+    const handleDateToChange = (value) => {
+        setDateTo(value);
+        applyFilters({ date_to: value });
     };
 
     const formatDate = (dateString) => {
@@ -145,13 +142,29 @@ export default function Index({ movements, products, types, filters }) {
                             <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{movements.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('stock-movements.create')} className="shrink-0">
-                        <Button className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            <span className="hidden sm:inline">Nuevo Movimiento</span>
-                            <span className="sm:hidden">Nuevo</span>
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2 shrink-0">
+                        <a
+                            href={route('export.movements', {
+                                product: filters.product || undefined,
+                                type: filters.type || undefined,
+                                date_from: filters.date_from || undefined,
+                                date_to: filters.date_to || undefined,
+                            })}
+                            className="hidden sm:block"
+                        >
+                            <Button variant="outline" className="gap-2">
+                                <Download className="h-4 w-4" />
+                                Exportar CSV
+                            </Button>
+                        </a>
+                        <Link href={route('stock-movements.create')}>
+                            <Button className="gap-2">
+                                <Plus className="h-4 w-4" />
+                                <span className="hidden sm:inline">Nuevo Movimiento</span>
+                                <span className="sm:hidden">Nuevo</span>
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
             }
         >
@@ -162,22 +175,14 @@ export default function Index({ movements, products, types, filters }) {
                     {/* Barra de filtros */}
                     <div className="space-y-4 mb-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                            <Select value={product === '' ? 'all' : product} onValueChange={handleProductChange}>
-                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
-                                    <SelectValue placeholder="Filtrar por producto" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">Todos los productos</SelectItem>
-                                    {products.map((prod) => (
-                                        <SelectItem key={prod.id} value={String(prod.id)}>
-                                            {prod.sku} - {prod.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <ProductFilterCombobox
+                                products={products}
+                                value={product}
+                                onValueChange={handleProductChange}
+                            />
 
                             <Select value={type === '' ? 'all' : type} onValueChange={handleTypeChange}>
-                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80">
                                     <SelectValue placeholder="Tipo" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -190,27 +195,17 @@ export default function Index({ movements, products, types, filters }) {
                                 </SelectContent>
                             </Select>
 
-                            <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-gray-400 shrink-0 hidden sm:block" />
-                                <Input
-                                    type="date"
-                                    value={dateFrom}
-                                    onChange={handleDateFromChange}
-                                    className="flex-1 h-10 rounded-xl border-gray-200 bg-white/80"
-                                    placeholder="Desde"
-                                />
-                            </div>
+                            <DatePicker
+                                value={dateFrom}
+                                onChange={handleDateFromChange}
+                                placeholder="Desde"
+                            />
 
-                            <div className="flex items-center gap-2">
-                                <span className="text-gray-400 hidden sm:block">-</span>
-                                <Input
-                                    type="date"
-                                    value={dateTo}
-                                    onChange={handleDateToChange}
-                                    className="flex-1 h-10 rounded-xl border-gray-200 bg-white/80"
-                                    placeholder="Hasta"
-                                />
-                            </div>
+                            <DatePicker
+                                value={dateTo}
+                                onChange={handleDateToChange}
+                                placeholder="Hasta"
+                            />
                         </div>
 
                         {hasFilters && (
