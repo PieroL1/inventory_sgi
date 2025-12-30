@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,8 +29,11 @@ class DashboardController extends Controller
                 'active' => Supplier::where('is_active', true)->count(),
             ],
             'inventory' => [
-                'total_value' => Product::where('is_active', true)->sum(\DB::raw('stock_quantity * unit_price')),
-                'total_cost' => Product::where('is_active', true)->sum(\DB::raw('stock_quantity * cost_price')),
+                'total_value' => Product::where('is_active', true)->sum(DB::raw('stock_quantity * unit_price')),
+                'total_cost' => Product::where('is_active', true)->sum(DB::raw('stock_quantity * cost_price')),
+            ],
+            'lowStock' => [
+                'count' => Product::where('is_active', true)->whereColumn('stock_quantity', '<', 'min_stock')->count(),
             ],
             'lowStock' => [
                 'count' => Product::where('is_active', true)->whereColumn('stock_quantity', '<', 'min_stock')->count(),
