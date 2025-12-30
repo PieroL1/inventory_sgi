@@ -100,17 +100,17 @@ Sistema monolítico modular para **control de stock, proveedores, movimientos de
 
 | Campo | Valor |
 |-------|-------|
-| **Fase actual** | Fase 3: Lógica de Inventario |
-| **Rama Git activa** | `feature/fase-3-inventario` |
-| **Última actualización** | 2025-12-30 - Modo oscuro implementado, sidebar colapsable, mejoras responsive |
+| **Fase actual** | Fase 4: Valorización y Reporting ✅ |
+| **Rama Git activa** | `feature/fase-4-valorizacion` |
+| **Última actualización** | 2025-12-30 - Fase 4 completada |
 | **Bloqueadores** | Ninguno |
 
 ### 5.1 Estrategia de Ramas Git
 
 | Rama | Propósito | Estado |
 |------|-----------|--------|
-| `main` | Versión estable de producción | Fase 2 completada |
-| `feature/fase-3-inventario` | Desarrollo de Fase 3 | En progreso |
+| `main` | Versión estable de producción | Fase 3 completada |
+| `feature/fase-4-valorizacion` | Desarrollo de Fase 4 | En progreso |
 
 **Flujo de trabajo:**
 1. `main` solo contiene código estable y probado (puntos de release por fase).
@@ -260,14 +260,34 @@ Sistema monolítico modular para **control de stock, proveedores, movimientos de
 
 ---
 
-### [ ] Fase 4: Valorización y Reporting
-- [ ] Cálculo de valor total de inventario (sum de unit_price * stock_quantity).
-- [ ] Historial de movimientos por producto.
-- [ ] Dashboard con métricas clave (productos bajo stock, valor total, movimientos recientes).
-- [ ] Exportación básica (CSV/Excel).
+### [x] Fase 4: Valorización y Reporting
+- [x] Página de detalle de producto con historial de movimientos.
+- [x] Exportación CSV de productos (con filtros aplicados).
+- [x] Exportación CSV de movimientos de stock (con filtros aplicados).
+- [x] Gráficos en Dashboard: movimientos por día/semana.
+- [x] Movimientos recientes en Dashboard.
 
 **Bitácora F4:**
-- *(pendiente)*
+- (30-dic) Rama `feature/fase-4-valorizacion` creada desde `main`.
+- (30-dic) **Página de Detalle de Producto (`Products/Show.jsx`):**
+  - Vista completa con información del producto, categoría, proveedor.
+  - 4 tarjetas de métricas: Stock actual, Valor inventario, Costo total, Ganancia potencial.
+  - Resumen de movimientos (total entradas, salidas, ajustes).
+  - Tabla de historial de movimientos con paginación y filtro por tipo.
+  - Alerta visual si el producto tiene stock bajo.
+  - Acceso desde listado de productos (nombre clickeable y opción en menú).
+- (30-dic) **Exportación CSV:**
+  - `ExportService` creado en `app/Services/` con métodos `exportProducts()` y `exportMovements()`.
+  - `ExportController` con rutas `export.products` y `export.movements`.
+  - Botón "Exportar CSV" en Products/Index y StockMovements/Index.
+  - Exporta con los mismos filtros aplicados en la vista.
+  - Formato CSV con separador `;` y BOM UTF-8 para compatibilidad con Excel.
+- (30-dic) **Gráficos en Dashboard:**
+  - Instalada librería Recharts para visualización de datos.
+  - Gráfico de barras con movimientos de los últimos 7 días (entradas, salidas, ajustes).
+  - Sección "Últimos Movimientos" con los 5 movimientos más recientes.
+  - DashboardController actualizado con `getMovementsByDay()` y `recentMovements`.
+- (30-dic) **FASE 4 COMPLETADA**
 
 ---
 

@@ -14,12 +14,26 @@ import {
     BarChart3,
     Clock,
     ShoppingCart,
+    ArrowDownCircle,
+    ArrowUpCircle,
+    RefreshCw,
+    ArrowLeftRight,
 } from 'lucide-react';
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+    Legend,
+} from 'recharts';
 
 /**
  * Dashboard principal del Sistema de Gestión de Inventario.
  */
-export default function Dashboard({ stats, lowStockProducts, recentProducts, topValueProducts }) {
+export default function Dashboard({ stats, lowStockProducts, recentProducts, topValueProducts, movementsByDay, recentMovements }) {
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('es-MX', {
             style: 'currency',
@@ -233,6 +247,140 @@ export default function Dashboard({ stats, lowStockProducts, recentProducts, top
                                             <Badge variant="secondary">
                                                 {product.stock_quantity} uds
                                             </Badge>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Gráfico de movimientos y movimientos recientes */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Gráfico de movimientos */}
+                    <Card className="lg:col-span-2">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/50">
+                                        <BarChart3 className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+                                    </div>
+                                    Movimientos (Últimos 7 días)
+                                </CardTitle>
+                                <Link href={route('stock-movements.index')}>
+                                    <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                                        Ver todos
+                                        <ArrowRight className="h-3 w-3" />
+                                    </Button>
+                                </Link>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                            {movementsByDay && movementsByDay.length > 0 ? (
+                                <div className="h-[280px] w-full">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={movementsByDay} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                                            <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
+                                            <XAxis 
+                                                dataKey="label" 
+                                                tick={{ fontSize: 12 }}
+                                                className="text-gray-600 dark:text-gray-400"
+                                            />
+                                            <YAxis 
+                                                tick={{ fontSize: 12 }}
+                                                className="text-gray-600 dark:text-gray-400"
+                                                allowDecimals={false}
+                                            />
+                                            <Tooltip 
+                                                contentStyle={{
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                                    border: '1px solid #e5e7eb',
+                                                    borderRadius: '8px',
+                                                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                                }}
+                                                labelStyle={{ fontWeight: 600 }}
+                                            />
+                                            <Legend 
+                                                wrapperStyle={{ paddingTop: '10px' }}
+                                            />
+                                            <Bar 
+                                                dataKey="entries" 
+                                                name="Entradas" 
+                                                fill="#10b981" 
+                                                radius={[4, 4, 0, 0]}
+                                            />
+                                            <Bar 
+                                                dataKey="exits" 
+                                                name="Salidas" 
+                                                fill="#ef4444" 
+                                                radius={[4, 4, 0, 0]}
+                                            />
+                                            <Bar 
+                                                dataKey="adjustments" 
+                                                name="Ajustes" 
+                                                fill="#f59e0b" 
+                                                radius={[4, 4, 0, 0]}
+                                            />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 mb-3">
+                                        <BarChart3 className="h-6 w-6 text-gray-400 dark:text-gray-500" />
+                                    </div>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">No hay movimientos registrados</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Movimientos recientes */}
+                    <Card className="lg:col-span-1">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/50">
+                                        <ArrowLeftRight className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                                    </div>
+                                    Últimos Movimientos
+                                </CardTitle>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                            {!recentMovements || recentMovements.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 mb-3">
+                                        <RefreshCw className="h-6 w-6 text-gray-400 dark:text-gray-500" />
+                                    </div>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Sin movimientos</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {recentMovements.map((movement) => (
+                                        <div
+                                            key={movement.id}
+                                            className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-gray-50/50 dark:from-gray-800/50 to-transparent border border-gray-100/50 dark:border-gray-700/30"
+                                        >
+                                            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                                                movement.type === 'entry' 
+                                                    ? 'bg-emerald-100 dark:bg-emerald-900/50' 
+                                                    : movement.type === 'exit' 
+                                                        ? 'bg-red-100 dark:bg-red-900/50' 
+                                                        : 'bg-amber-100 dark:bg-amber-900/50'
+                                            }`}>
+                                                {movement.type === 'entry' && <ArrowDownCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />}
+                                                {movement.type === 'exit' && <ArrowUpCircle className="h-4 w-4 text-red-600 dark:text-red-400" />}
+                                                {movement.type === 'adjustment' && <RefreshCw className="h-4 w-4 text-amber-600 dark:text-amber-400" />}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                                                    {movement.product?.name || 'Producto'}
+                                                </p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    {movement.type === 'entry' ? '+' : movement.type === 'exit' ? '-' : '±'}{movement.quantity} unidades
+                                                </p>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

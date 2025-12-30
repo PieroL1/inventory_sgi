@@ -92,6 +92,43 @@ class ProductController extends Controller
     }
 
     /**
+     * Muestra el detalle de un producto con su historial de movimientos.
+     */
+    public function show(Request $request, Product $product): Response
+    {
+        $product->load(['category', 'supplier']);
+
+        // Historial de movimientos con paginación
+        $movementsQuery = $product->stockMovements()->with('user')->latest();
+
+        // Filtro por tipo de movimiento
+        if ($type = $request->input('type')) {
+            $movementsQuery->where('type', $type);
+        }
+
+        $movements = $movementsQuery->paginate(10)->withQueryString();
+
+        // Estadísticas del producto
+        $stats = [
+            'total_entries' => $product->stockMovements()->where('type', 'entry')->sum('quantity'),
+            'total_exits' => $product->stockMovements()->where('type', 'exit')->sum('quantity'),
+            'total_adjustments' => $product->stockMovements()->where('type', 'adjustment')->count(),
+            'inventory_value' => $product->stock_quantity * $product->unit_price,
+            'inventory_cost' => $product->stock_quantity * $product->cost_price,
+            'potential_profit' => ($product->stock_quantity * $product->unit_price) - ($product->stock_quantity * $product->cost_price),
+        ];
+
+        return Inertia::render('Products/Show', [
+            'product' => $product,
+            'movements' => $movements,
+            'stats' => $stats,
+            'filters' => [
+                'type' => $request->input('type', ''),
+            ],
+        ]);
+    }
+
+    /**
      * Muestra el formulario para editar un producto.
      */
     public function edit(Product $product): Response

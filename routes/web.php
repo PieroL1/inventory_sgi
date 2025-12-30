@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\SupplierController;
@@ -31,10 +32,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('suppliers', SupplierController::class)->except(['show']);
 
     // CRUD Productos
-    Route::resource('products', ProductController::class)->except(['show']);
+    Route::resource('products', ProductController::class);
 
     // Movimientos de Stock (solo index, create, store)
     Route::resource('stock-movements', StockMovementController::class)->only(['index', 'create', 'store']);
+
+    // Exportaciones CSV
+    Route::prefix('export')->name('export.')->group(function () {
+        Route::get('/products', [ExportController::class, 'products'])->name('products');
+        Route::get('/movements', [ExportController::class, 'movements'])->name('movements');
+    });
 });
 
 require __DIR__.'/auth.php';
