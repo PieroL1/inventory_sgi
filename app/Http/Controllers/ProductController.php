@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,14 +19,52 @@ class ProductController extends Controller
     /**
      * Muestra el listado de productos.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $products = Product::with(['category', 'supplier'])
-            ->orderBy('name')
-            ->paginate(10);
+        $query = Product::with(['category', 'supplier']);
+
+        // Filtro de búsqueda
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', "%{$search}%")
+                  ->orWhere('sku', 'ilike', "%{$search}%")
+                  ->orWhere('description', 'ilike', "%{$search}%");
+            });
+        }
+
+        // Filtro por categoría
+        if ($categoryId = $request->input('category')) {
+            $query->where('category_id', $categoryId);
+        }
+
+        // Filtro por proveedor
+        if ($supplierId = $request->input('supplier')) {
+            $query->where('supplier_id', $supplierId);
+        }
+
+        // Filtro por estado
+        if ($request->has('status') && $request->input('status') !== '') {
+            $query->where('is_active', $request->boolean('status'));
+        }
+
+        // Filtro por stock bajo
+        if ($request->boolean('low_stock')) {
+            $query->whereColumn('stock_quantity', '<', 'min_stock');
+        }
+
+        $products = $query->orderBy('name')->paginate(10)->withQueryString();
 
         return Inertia::render('Products/Index', [
             'products' => $products,
+            'categories' => Category::where('is_active', true)->orderBy('name')->get(['id', 'name']),
+            'suppliers' => Supplier::where('is_active', true)->orderBy('name')->get(['id', 'name']),
+            'filters' => [
+                'search' => $request->input('search', ''),
+                'category' => $request->input('category', ''),
+                'supplier' => $request->input('supplier', ''),
+                'status' => $request->input('status', ''),
+                'low_stock' => $request->boolean('low_stock'),
+            ],
         ]);
     }
 

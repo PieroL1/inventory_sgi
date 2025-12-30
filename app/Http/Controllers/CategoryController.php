@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,15 +18,31 @@ class CategoryController extends Controller
     /**
      * Muestra el listado de categorías.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $categories = Category::with('parent')
-            ->withCount('products')
-            ->orderBy('name')
-            ->paginate(10);
+        $query = Category::with('parent')->withCount('products');
+
+        // Filtro de búsqueda
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', "%{$search}%")
+                  ->orWhere('description', 'ilike', "%{$search}%");
+            });
+        }
+
+        // Filtro por estado
+        if ($request->has('status') && $request->input('status') !== '') {
+            $query->where('is_active', $request->boolean('status'));
+        }
+
+        $categories = $query->orderBy('name')->paginate(10)->withQueryString();
 
         return Inertia::render('Categories/Index', [
             'categories' => $categories,
+            'filters' => [
+                'search' => $request->input('search', ''),
+                'status' => $request->input('status', ''),
+            ],
         ]);
     }
 

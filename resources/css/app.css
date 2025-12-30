@@ -1,61 +1,60 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-/*
- ---break---
- */
+
 @custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/forms";
 
 /*
  * ===========================================
- * TEMA BASE SGI - Sistema de Gestión de Inventario
+ * TEMA SGI - Sistema de Gestión de Inventario
  * ===========================================
- * Configuración de colores y tipografía del proyecto.
- * En Tailwind v4, la configuración va directamente en CSS.
+ * Diseño moderno, minimalista con glassmorphism
  */
 
 @theme {
     /* Tipografía principal */
-    --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: "Inter", "Figtree", ui-sans-serif, system-ui, sans-serif;
 
-    /* Colores primarios del SGI (azul profesional) */
-    --color-primary-50: oklch(0.97 0.02 240);
-    --color-primary-100: oklch(0.93 0.04 240);
-    --color-primary-200: oklch(0.86 0.08 240);
-    --color-primary-300: oklch(0.76 0.12 240);
-    --color-primary-400: oklch(0.64 0.16 240);
-    --color-primary-500: oklch(0.55 0.18 240);
-    --color-primary-600: oklch(0.48 0.18 240);
-    --color-primary-700: oklch(0.42 0.16 240);
-    --color-primary-800: oklch(0.36 0.14 240);
-    --color-primary-900: oklch(0.30 0.12 240);
-    --color-primary-950: oklch(0.22 0.10 240);
+    /* Colores primarios - Azul vibrante pero elegante */
+    --color-primary-50: oklch(0.97 0.01 250);
+    --color-primary-100: oklch(0.94 0.03 250);
+    --color-primary-200: oklch(0.88 0.06 250);
+    --color-primary-300: oklch(0.78 0.10 250);
+    --color-primary-400: oklch(0.65 0.15 250);
+    --color-primary-500: oklch(0.55 0.20 250);
+    --color-primary-600: oklch(0.50 0.22 250);
+    --color-primary-700: oklch(0.44 0.20 250);
+    --color-primary-800: oklch(0.38 0.16 250);
+    --color-primary-900: oklch(0.32 0.12 250);
+    --color-primary-950: oklch(0.24 0.10 250);
 
-    /* Colores de éxito (verde) */
-    --color-success-500: oklch(0.65 0.18 145);
-    --color-success-600: oklch(0.55 0.16 145);
+    /* Colores de éxito - Verde fresco */
+    --color-success-50: oklch(0.97 0.02 155);
+    --color-success-100: oklch(0.94 0.04 155);
+    --color-success-500: oklch(0.70 0.18 155);
+    --color-success-600: oklch(0.60 0.16 155);
 
-    /* Colores de advertencia (amarillo/naranja) */
-    --color-warning-500: oklch(0.75 0.18 85);
-    --color-warning-600: oklch(0.65 0.16 85);
+    /* Colores de advertencia - Ámbar cálido */
+    --color-warning-50: oklch(0.98 0.02 85);
+    --color-warning-100: oklch(0.95 0.05 85);
+    --color-warning-500: oklch(0.80 0.16 85);
+    --color-warning-600: oklch(0.70 0.15 85);
 
-    /* Colores de error (rojo) */
-    --color-danger-500: oklch(0.60 0.20 25);
-    --color-danger-600: oklch(0.50 0.18 25);
+    /* Colores de error - Rojo coral */
+    --color-danger-50: oklch(0.97 0.02 25);
+    --color-danger-100: oklch(0.94 0.04 25);
+    --color-danger-500: oklch(0.65 0.20 25);
+    --color-danger-600: oklch(0.55 0.18 25);
 }
 
-/*
- ---break---
- */
-
 @theme inline {
-    --radius-sm: calc(var(--radius) - 4px);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) + 4px);
-    --radius-2xl: calc(var(--radius) + 8px);
-    --radius-3xl: calc(var(--radius) + 12px);
-    --radius-4xl: calc(var(--radius) + 16px);
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.5rem;
+    --radius-3xl: 2rem;
+    --radius-4xl: 2.5rem;
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --color-card: var(--card);
@@ -89,105 +88,248 @@
     --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/*
- ---break---
- */
-
 :root {
-    --radius: 0.625rem;
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --radius: 0.75rem;
+    /* Fondo con gradiente sutil */
+    --background: oklch(0.98 0.005 250);
+    --foreground: oklch(0.20 0.02 250);
+    /* Cards con efecto glass */
+    --card: oklch(1 0 0 / 80%);
+    --card-foreground: oklch(0.20 0.02 250);
+    --popover: oklch(1 0 0 / 95%);
+    --popover-foreground: oklch(0.20 0.02 250);
+    /* Primary - Azul vibrante */
+    --primary: oklch(0.50 0.22 250);
+    --primary-foreground: oklch(1 0 0);
+    /* Secondary - Gris azulado suave */
+    --secondary: oklch(0.96 0.01 250);
+    --secondary-foreground: oklch(0.35 0.03 250);
+    /* Muted - Tonos suaves */
+    --muted: oklch(0.96 0.005 250);
+    --muted-foreground: oklch(0.50 0.02 250);
+    /* Accent - Destacado sutil */
+    --accent: oklch(0.94 0.02 250);
+    --accent-foreground: oklch(0.30 0.03 250);
+    /* Destructive */
+    --destructive: oklch(0.60 0.20 25);
+    /* Borders - Muy sutiles */
+    --border: oklch(0.90 0.01 250);
+    --input: oklch(0.92 0.01 250);
+    --ring: oklch(0.50 0.22 250);
+    /* Charts */
+    --chart-1: oklch(0.55 0.22 250);
+    --chart-2: oklch(0.70 0.18 155);
+    --chart-3: oklch(0.75 0.16 85);
+    --chart-4: oklch(0.65 0.20 320);
+    --chart-5: oklch(0.60 0.18 200);
+    /* Sidebar */
+    --sidebar: oklch(0.18 0.03 250);
+    --sidebar-foreground: oklch(0.95 0.01 250);
+    --sidebar-primary: oklch(0.55 0.22 250);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.25 0.04 250);
+    --sidebar-accent-foreground: oklch(0.95 0.01 250);
+    --sidebar-border: oklch(0.30 0.03 250);
+    --sidebar-ring: oklch(0.55 0.22 250);
 }
-
-/*
- ---break---
- */
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --background: oklch(0.13 0.02 250);
+    --foreground: oklch(0.95 0.01 250);
+    --card: oklch(0.18 0.02 250 / 80%);
+    --card-foreground: oklch(0.95 0.01 250);
+    --popover: oklch(0.18 0.02 250 / 95%);
+    --popover-foreground: oklch(0.95 0.01 250);
+    --primary: oklch(0.60 0.20 250);
+    --primary-foreground: oklch(0.15 0.02 250);
+    --secondary: oklch(0.22 0.02 250);
+    --secondary-foreground: oklch(0.90 0.01 250);
+    --muted: oklch(0.22 0.02 250);
+    --muted-foreground: oklch(0.65 0.02 250);
+    --accent: oklch(0.25 0.03 250);
+    --accent-foreground: oklch(0.95 0.01 250);
+    --destructive: oklch(0.60 0.20 25);
+    --border: oklch(0.28 0.02 250);
+    --input: oklch(0.25 0.02 250);
+    --ring: oklch(0.60 0.20 250);
+    --chart-1: oklch(0.60 0.20 250);
+    --chart-2: oklch(0.70 0.18 155);
+    --chart-3: oklch(0.75 0.16 85);
+    --chart-4: oklch(0.65 0.20 320);
+    --chart-5: oklch(0.60 0.18 200);
+    --sidebar: oklch(0.13 0.02 250);
+    --sidebar-foreground: oklch(0.95 0.01 250);
+    --sidebar-primary: oklch(0.60 0.20 250);
+    --sidebar-primary-foreground: oklch(0.15 0.02 250);
+    --sidebar-accent: oklch(0.22 0.03 250);
+    --sidebar-accent-foreground: oklch(0.95 0.01 250);
+    --sidebar-border: oklch(0.28 0.02 250);
+    --sidebar-ring: oklch(0.60 0.20 250);
 }
-
-/*
- ---break---
- */
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground antialiased;
     }
 }
 
 /*
- * Fix para Radix UI Dropdown Menu
- * Asegura que el contenido del dropdown sea visible y clickeable
+ * ===========================================
+ * UTILIDADES PERSONALIZADAS
+ * ===========================================
  */
-[data-radix-popper-content-wrapper] {
-  z-index: 50 !important;
+
+/* Efecto glassmorphism para cards */
+.glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl shadow-black/5;
 }
 
-/* Asegura que el contenido del dropdown menu sea interactivo */
+.glass-card {
+    @apply bg-white/80 backdrop-blur-xl border border-white/30 shadow-lg shadow-primary-500/5;
+}
+
+/* Gradiente de fondo principal */
+.bg-gradient-main {
+    background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.90 0.08 250 / 30%), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, oklch(0.92 0.06 320 / 20%), transparent),
+        oklch(0.98 0.005 250);
+}
+
+/* Sombras personalizadas */
+.shadow-soft {
+    box-shadow:
+        0 1px 2px oklch(0.20 0.02 250 / 5%),
+        0 4px 8px oklch(0.20 0.02 250 / 5%),
+        0 8px 16px oklch(0.20 0.02 250 / 5%);
+}
+
+.shadow-glow {
+    box-shadow:
+        0 0 20px oklch(0.55 0.22 250 / 15%),
+        0 4px 12px oklch(0.20 0.02 250 / 10%);
+}
+
+/* Hover effects */
+.hover-lift {
+    @apply transition-all duration-300 ease-out;
+}
+
+.hover-lift:hover {
+    @apply -translate-y-0.5;
+    box-shadow:
+        0 4px 12px oklch(0.20 0.02 250 / 8%),
+        0 8px 24px oklch(0.20 0.02 250 / 8%);
+}
+
+/* Sidebar styles */
+.bg-sidebar {
+    @apply relative;
+    z-index: 10;
+}
+
+.bg-sidebar a,
+.bg-sidebar button {
+    @apply relative;
+    z-index: 1;
+}
+
+/* Sidebar active item glow */
+.sidebar-item-active {
+    @apply relative;
+}
+
+.sidebar-item-active::before {
+    content: '';
+    @apply absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-500 rounded-r-full;
+    box-shadow: 0 0 12px oklch(0.55 0.22 250 / 50%);
+}
+
+/* Badge variants mejorados */
+.badge-success {
+    @apply bg-success-50 text-success-600 border border-success-200;
+}
+
+.badge-warning {
+    @apply bg-warning-50 text-warning-600 border border-warning-200;
+}
+
+.badge-danger {
+    @apply bg-danger-50 text-danger-600 border border-danger-200;
+}
+
+/* Input focus ring mejorado */
+.input-focus-ring {
+    @apply focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-200;
+}
+
+/* Table row hover */
+.table-row-hover {
+    @apply hover:bg-primary-50/50 transition-colors duration-150;
+}
+
+/*
+ * ===========================================
+ * FIXES PARA RADIX UI
+ * ===========================================
+ */
+
+[data-radix-popper-content-wrapper] {
+    z-index: 50 !important;
+}
+
 [data-slot="dropdown-menu-content"] {
-  pointer-events: auto !important;
+    pointer-events: auto !important;
+}
+
+/* Animaciones suaves para dropdowns y modales */
+[data-state="open"] {
+    animation: fadeIn 0.15s ease-out;
+}
+
+[data-state="closed"] {
+    animation: fadeOut 0.1s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97) translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.97) translateY(-4px);
+    }
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
 }

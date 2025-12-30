@@ -77,8 +77,8 @@ Principios del proyecto:
 | Campo | Valor |
 |-------|-------|
 | **Fase actual** | Fase 2: CRUDs Básicos |
-| **Última actualización** | 2024-12-29 - CRUDs creados, pendiente dropdown acciones |
-| **Bloqueadores** | Dropdown de acciones no funciona en las tablas |
+| **Última actualización** | 2025-12-29 - Búsqueda y paginación implementadas |
+| **Bloqueadores** | Ninguno |
 
 ---
 
@@ -132,8 +132,8 @@ Principios del proyecto:
 - [x] CRUD Categorías (Controller, páginas Inertia, validación).
 - [x] CRUD Proveedores.
 - [x] CRUD Productos (con selects de categoría y proveedor).
-- [ ] Corregir dropdown de acciones (Editar/Eliminar).
-- [ ] Implementar búsqueda y paginación básica.
+- [x] Corregir dropdown de acciones (Editar/Eliminar).
+- [x] Implementar búsqueda y paginación básica.
 - [ ] Mejorar diseño UI.
 
 **Bitácora F2:**
@@ -143,7 +143,15 @@ Principios del proyecto:
 - (29-dic) Navegación actualizada con enlaces a Categorías, Proveedores, Productos.
 - (29-dic) Componentes shadcn/ui: Dialog, Dropdown-menu, Badge, Alert, Select, Textarea, Separator, Sonner.
 - (29-dic) Hook useFlashMessages para notificaciones toast.
-- (29-dic) **BUG:** Dropdown de acciones no abre - pendiente investigar.
+- (29-dic) **BUG CORREGIDO:** Dropdown de acciones - conflicto entre `Slot` de Radix y `Button` de shadcn. Solución: usar `<button>` nativo en `DropdownMenuTrigger` y `router.visit()` en lugar de `<Link>` con `asChild`.
+- (29-dic) Configurado alias `@` en `vite.config.js` para imports.
+- (29-dic) Corregido `sonner.jsx` - removido `useTheme` de next-themes (no hay ThemeProvider).
+- (29-dic) Agregado `modal={false}` a `DropdownMenu` para evitar bloqueo de scroll.
+- (29-dic) **Búsqueda y paginación implementadas** en los 3 CRUDs:
+  - Categories: búsqueda por nombre/descripción + filtro estado.
+  - Suppliers: búsqueda por nombre/email/teléfono + filtro estado.
+  - Products: búsqueda por nombre/SKU/descripción + filtros por categoría, proveedor, estado y stock bajo.
+  - Paginación mejorada con números de página clickeables y `withQueryString()` para preservar filtros.
 
 ---
 

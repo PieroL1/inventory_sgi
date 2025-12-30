@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SupplierRequest;
 use App\Models\Supplier;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,14 +17,32 @@ class SupplierController extends Controller
     /**
      * Muestra el listado de proveedores.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $suppliers = Supplier::withCount('products')
-            ->orderBy('name')
-            ->paginate(10);
+        $query = Supplier::withCount('products');
+
+        // Filtro de búsqueda
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', "%{$search}%")
+                  ->orWhere('contact_email', 'ilike', "%{$search}%")
+                  ->orWhere('phone', 'ilike', "%{$search}%");
+            });
+        }
+
+        // Filtro por estado
+        if ($request->has('status') && $request->input('status') !== '') {
+            $query->where('is_active', $request->boolean('status'));
+        }
+
+        $suppliers = $query->orderBy('name')->paginate(10)->withQueryString();
 
         return Inertia::render('Suppliers/Index', [
             'suppliers' => $suppliers,
+            'filters' => [
+                'search' => $request->input('search', ''),
+                'status' => $request->input('status', ''),
+            ],
         ]);
     }
 
