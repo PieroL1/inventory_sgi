@@ -85,20 +85,21 @@ export default function Index({ suppliers, filters }) {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/25">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/25">
                             <Truck className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900">Proveedores</h1>
-                            <p className="text-sm text-gray-500">{suppliers.total} registros</p>
+                        <div className="min-w-0">
+                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Proveedores</h1>
+                            <p className="text-xs sm:text-sm text-gray-500">{suppliers.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('suppliers.create')}>
+                    <Link href={route('suppliers.create')} className="shrink-0">
                         <Button className="gap-2">
                             <Plus className="h-4 w-4" />
-                            Nuevo Proveedor
+                            <span className="hidden sm:inline">Nuevo Proveedor</span>
+                            <span className="sm:hidden">Nuevo</span>
                         </Button>
                     </Link>
                 </div>

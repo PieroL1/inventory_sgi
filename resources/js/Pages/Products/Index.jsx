@@ -119,20 +119,21 @@ export default function Index({ products, categories, suppliers, filters }) {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25">
                             <Package className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900">Productos</h1>
-                            <p className="text-sm text-gray-500">{products.total} registros</p>
+                        <div className="min-w-0">
+                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Productos</h1>
+                            <p className="text-xs sm:text-sm text-gray-500">{products.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('products.create')}>
+                    <Link href={route('products.create')} className="shrink-0">
                         <Button className="gap-2">
                             <Plus className="h-4 w-4" />
-                            Nuevo Producto
+                            <span className="hidden sm:inline">Nuevo Producto</span>
+                            <span className="sm:hidden">Nuevo</span>
                         </Button>
                     </Link>
                 </div>
@@ -175,9 +176,9 @@ export default function Index({ products, categories, suppliers, filters }) {
                                 </Button>
                             )}
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <Select value={category === '' ? 'all' : category} onValueChange={handleCategoryChange}>
-                                <SelectTrigger className="w-full sm:w-48 h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
                                     <SelectValue placeholder="Categoría" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -190,7 +191,7 @@ export default function Index({ products, categories, suppliers, filters }) {
                                 </SelectContent>
                             </Select>
                             <Select value={supplier === '' ? 'all' : supplier} onValueChange={handleSupplierChange}>
-                                <SelectTrigger className="w-full sm:w-48 h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
                                     <SelectValue placeholder="Proveedor" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -203,7 +204,7 @@ export default function Index({ products, categories, suppliers, filters }) {
                                 </SelectContent>
                             </Select>
                             <Select value={status === '' ? 'all' : status} onValueChange={handleStatusChange}>
-                                <SelectTrigger className="w-full sm:w-40 h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
                                     <SelectValue placeholder="Estado" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -215,12 +216,13 @@ export default function Index({ products, categories, suppliers, filters }) {
                             <Button
                                 variant={lowStock ? 'default' : 'outline'}
                                 onClick={handleLowStockToggle}
-                                className={`gap-2 ${lowStock ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/25' : ''}`}
+                                className={`gap-1.5 ${lowStock ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/25' : ''}`}
                             >
-                                <AlertTriangle className="h-4 w-4" />
-                                Stock bajo
+                                <AlertTriangle className="h-4 w-4 shrink-0" />
+                                <span className="hidden sm:inline">Stock bajo</span>
+                                <span className="sm:hidden">Bajo</span>
                                 {lowStock && (
-                                    <span className="ml-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1.5 text-xs font-bold">
+                                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1 text-xs font-bold">
                                         {products.total}
                                     </span>
                                 )}

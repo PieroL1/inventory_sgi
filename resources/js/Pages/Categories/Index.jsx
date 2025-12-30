@@ -86,20 +86,21 @@ export default function Index({ categories, filters }) {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/25">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/25">
                             <FolderTree className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900">Categorías</h1>
-                            <p className="text-sm text-gray-500">{categories.total} registros</p>
+                        <div className="min-w-0">
+                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Categorías</h1>
+                            <p className="text-xs sm:text-sm text-gray-500">{categories.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('categories.create')}>
+                    <Link href={route('categories.create')} className="shrink-0">
                         <Button className="gap-2">
                             <Plus className="h-4 w-4" />
-                            Nueva Categoría
+                            <span className="hidden sm:inline">Nueva Categoría</span>
+                            <span className="sm:hidden">Nueva</span>
                         </Button>
                     </Link>
                 </div>

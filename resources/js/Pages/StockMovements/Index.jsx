@@ -135,20 +135,21 @@ export default function Index({ movements, products, types, filters }) {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25">
                             <ArrowLeftRight className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900">Movimientos de Stock</h1>
-                            <p className="text-sm text-gray-500">{movements.total} registros</p>
+                        <div className="min-w-0">
+                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">Movimientos de Stock</h1>
+                            <p className="text-xs sm:text-sm text-gray-500">{movements.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('stock-movements.create')}>
+                    <Link href={route('stock-movements.create')} className="shrink-0">
                         <Button className="gap-2">
                             <Plus className="h-4 w-4" />
-                            Nuevo Movimiento
+                            <span className="hidden sm:inline">Nuevo Movimiento</span>
+                            <span className="sm:hidden">Nuevo</span>
                         </Button>
                     </Link>
                 </div>
@@ -157,12 +158,12 @@ export default function Index({ movements, products, types, filters }) {
             <Head title="Movimientos de Stock" />
 
             <Card>
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                     {/* Barra de filtros */}
                     <div className="space-y-4 mb-6">
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                             <Select value={product === '' ? 'all' : product} onValueChange={handleProductChange}>
-                                <SelectTrigger className="w-full sm:w-64 h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
                                     <SelectValue placeholder="Filtrar por producto" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -176,7 +177,7 @@ export default function Index({ movements, products, types, filters }) {
                             </Select>
 
                             <Select value={type === '' ? 'all' : type} onValueChange={handleTypeChange}>
-                                <SelectTrigger className="w-full sm:w-44 h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
                                     <SelectValue placeholder="Tipo" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -190,35 +191,38 @@ export default function Index({ movements, products, types, filters }) {
                             </Select>
 
                             <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-gray-400" />
+                                <Calendar className="h-4 w-4 text-gray-400 shrink-0 hidden sm:block" />
                                 <Input
                                     type="date"
                                     value={dateFrom}
                                     onChange={handleDateFromChange}
-                                    className="w-40 h-10 rounded-xl border-gray-200 bg-white/80"
+                                    className="flex-1 h-10 rounded-xl border-gray-200 bg-white/80"
                                     placeholder="Desde"
                                 />
-                                <span className="text-gray-400">-</span>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-400 hidden sm:block">-</span>
                                 <Input
                                     type="date"
                                     value={dateTo}
                                     onChange={handleDateToChange}
-                                    className="w-40 h-10 rounded-xl border-gray-200 bg-white/80"
+                                    className="flex-1 h-10 rounded-xl border-gray-200 bg-white/80"
                                     placeholder="Hasta"
                                 />
                             </div>
-
-                            {hasFilters && (
-                                <Button
-                                    variant="ghost"
-                                    onClick={clearFilters}
-                                    className="gap-2 text-gray-500"
-                                >
-                                    <X className="h-4 w-4" />
-                                    Limpiar
-                                </Button>
-                            )}
                         </div>
+
+                        {hasFilters && (
+                            <Button
+                                variant="ghost"
+                                onClick={clearFilters}
+                                className="gap-2 text-gray-500"
+                            >
+                                <X className="h-4 w-4" />
+                                Limpiar
+                            </Button>
+                        )}
                     </div>
 
                     {movements.data.length === 0 ? (
