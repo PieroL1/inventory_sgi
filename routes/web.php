@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,9 @@ Route::middleware('auth')->group(function () {
 
     // CRUD Productos
     Route::resource('products', ProductController::class)->except(['show']);
+
+    // Movimientos de Stock (solo index, create, store)
+    Route::resource('stock-movements', StockMovementController::class)->only(['index', 'create', 'store']);
 });
 
 require __DIR__.'/auth.php';

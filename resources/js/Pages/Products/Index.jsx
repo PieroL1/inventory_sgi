@@ -119,20 +119,21 @@ export default function Index({ products, categories, suppliers, filters }) {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25">
                             <Package className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900">Productos</h1>
-                            <p className="text-sm text-gray-500">{products.total} registros</p>
+                        <div className="min-w-0">
+                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">Productos</h1>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{products.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('products.create')}>
+                    <Link href={route('products.create')} className="shrink-0">
                         <Button className="gap-2">
                             <Plus className="h-4 w-4" />
-                            Nuevo Producto
+                            <span className="hidden sm:inline">Nuevo Producto</span>
+                            <span className="sm:hidden">Nuevo</span>
                         </Button>
                     </Link>
                 </div>
@@ -175,9 +176,9 @@ export default function Index({ products, categories, suppliers, filters }) {
                                 </Button>
                             )}
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <Select value={category === '' ? 'all' : category} onValueChange={handleCategoryChange}>
-                                <SelectTrigger className="w-full sm:w-48 h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
                                     <SelectValue placeholder="Categoría" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -190,7 +191,7 @@ export default function Index({ products, categories, suppliers, filters }) {
                                 </SelectContent>
                             </Select>
                             <Select value={supplier === '' ? 'all' : supplier} onValueChange={handleSupplierChange}>
-                                <SelectTrigger className="w-full sm:w-48 h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
                                     <SelectValue placeholder="Proveedor" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -203,7 +204,7 @@ export default function Index({ products, categories, suppliers, filters }) {
                                 </SelectContent>
                             </Select>
                             <Select value={status === '' ? 'all' : status} onValueChange={handleStatusChange}>
-                                <SelectTrigger className="w-full sm:w-40 h-10 rounded-xl border-gray-200 bg-white/80">
+                                <SelectTrigger className="w-full h-10 rounded-xl border-gray-200 bg-white/80">
                                     <SelectValue placeholder="Estado" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -215,23 +216,29 @@ export default function Index({ products, categories, suppliers, filters }) {
                             <Button
                                 variant={lowStock ? 'default' : 'outline'}
                                 onClick={handleLowStockToggle}
-                                className="gap-2"
+                                className={`gap-1.5 ${lowStock ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/25' : ''}`}
                             >
-                                <AlertTriangle className="h-4 w-4" />
-                                Stock bajo
+                                <AlertTriangle className="h-4 w-4 shrink-0" />
+                                <span className="hidden sm:inline">Stock bajo</span>
+                                <span className="sm:hidden">Bajo</span>
+                                {lowStock && (
+                                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1 text-xs font-bold">
+                                        {products.total}
+                                    </span>
+                                )}
                             </Button>
                         </div>
                     </div>
 
                     {products.data.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 mb-4">
-                                <Package className="h-8 w-8 text-gray-400" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800 mb-4">
+                                <Package className="h-8 w-8 text-gray-400 dark:text-gray-500" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                 {hasFilters ? 'No se encontraron productos' : 'No hay productos'}
                             </h3>
-                            <p className="mt-1 text-sm text-gray-500 max-w-sm">
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-sm">
                                 {hasFilters
                                     ? 'Intenta con otros términos de búsqueda o ajusta los filtros.'
                                     : 'Comienza agregando tu primer producto para gestionar tu inventario.'}
@@ -246,10 +253,10 @@ export default function Index({ products, categories, suppliers, filters }) {
                             )}
                         </div>
                     ) : (
-                        <div className="rounded-xl border border-gray-100 overflow-hidden">
+                        <div className="rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="bg-gray-50/50">
+                                    <TableRow className="bg-gray-50/50 dark:bg-gray-800/50">
                                         <TableHead>SKU</TableHead>
                                         <TableHead>Nombre</TableHead>
                                         <TableHead>Categoría</TableHead>
@@ -270,7 +277,7 @@ export default function Index({ products, categories, suppliers, filters }) {
                                                 <TableCell className="font-mono text-sm text-gray-600">
                                                     {product.sku}
                                                 </TableCell>
-                                                <TableCell className="font-medium text-gray-900">
+                                                <TableCell className="font-medium text-gray-900 dark:text-gray-100">
                                                     {product.name}
                                                 </TableCell>
                                                 <TableCell>
@@ -279,7 +286,7 @@ export default function Index({ products, categories, suppliers, filters }) {
                                                             {product.category.name}
                                                         </Badge>
                                                     ) : (
-                                                        <span className="text-gray-400 text-sm">—</span>
+                                                        <span className="text-gray-400 dark:text-gray-500 text-sm">—</span>
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="text-gray-600 text-sm">
@@ -288,7 +295,7 @@ export default function Index({ products, categories, suppliers, filters }) {
                                                 <TableCell className="text-right text-gray-600 text-sm">
                                                     {formatCurrency(product.cost_price)}
                                                 </TableCell>
-                                                <TableCell className="text-right font-medium text-gray-900">
+                                                <TableCell className="text-right font-medium text-gray-900 dark:text-gray-100">
                                                     {formatCurrency(product.unit_price)}
                                                 </TableCell>
                                                 <TableCell className="text-center">
@@ -311,7 +318,7 @@ export default function Index({ products, categories, suppliers, filters }) {
                                                         <DropdownMenuTrigger asChild>
                                                             <button
                                                                 type="button"
-                                                                className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+                                                                className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                                                             >
                                                                 <MoreHorizontal className="h-4 w-4" />
                                                                 <span className="sr-only">Abrir menú</span>
@@ -345,9 +352,9 @@ export default function Index({ products, categories, suppliers, filters }) {
 
                     {/* Paginación */}
                     {products.total > 0 && (
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-100">
-                            <p className="text-sm text-gray-500">
-                                Mostrando <span className="font-medium text-gray-700">{products.from}</span> a <span className="font-medium text-gray-700">{products.to}</span> de <span className="font-medium text-gray-700">{products.total}</span> resultados
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-100 dark:border-gray-800">
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Mostrando <span className="font-medium text-gray-700 dark:text-gray-300">{products.from}</span> a <span className="font-medium text-gray-700 dark:text-gray-300">{products.to}</span> de <span className="font-medium text-gray-700 dark:text-gray-300">{products.total}</span> resultados
                             </p>
                             {products.last_page > 1 && (
                                 <div className="flex items-center gap-1">

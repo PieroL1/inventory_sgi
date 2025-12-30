@@ -31,6 +31,9 @@ class DashboardController extends Controller
                 'total_value' => Product::where('is_active', true)->sum(\DB::raw('stock_quantity * unit_price')),
                 'total_cost' => Product::where('is_active', true)->sum(\DB::raw('stock_quantity * cost_price')),
             ],
+            'lowStock' => [
+                'count' => Product::where('is_active', true)->whereColumn('stock_quantity', '<', 'min_stock')->count(),
+            ],
         ];
 
         // Productos con stock bajo

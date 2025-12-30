@@ -85,20 +85,21 @@ export default function Index({ suppliers, filters }) {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/25">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/25">
                             <Truck className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900">Proveedores</h1>
-                            <p className="text-sm text-gray-500">{suppliers.total} registros</p>
+                        <div className="min-w-0">
+                            <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">Proveedores</h1>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{suppliers.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('suppliers.create')}>
+                    <Link href={route('suppliers.create')} className="shrink-0">
                         <Button className="gap-2">
                             <Plus className="h-4 w-4" />
-                            Nuevo Proveedor
+                            <span className="hidden sm:inline">Nuevo Proveedor</span>
+                            <span className="sm:hidden">Nuevo</span>
                         </Button>
                     </Link>
                 </div>
@@ -153,13 +154,13 @@ export default function Index({ suppliers, filters }) {
 
                     {suppliers.data.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 mb-4">
-                                <Truck className="h-8 w-8 text-gray-400" />
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800 mb-4">
+                                <Truck className="h-8 w-8 text-gray-400 dark:text-gray-500" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                                 {hasFilters ? 'No se encontraron proveedores' : 'No hay proveedores'}
                             </h3>
-                            <p className="mt-1 text-sm text-gray-500 max-w-sm">
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-sm">
                                 {hasFilters
                                     ? 'Intenta con otros términos de búsqueda o ajusta los filtros.'
                                     : 'Comienza agregando tu primer proveedor para gestionar tu inventario.'}
@@ -174,10 +175,10 @@ export default function Index({ suppliers, filters }) {
                             )}
                         </div>
                     ) : (
-                        <div className="rounded-xl border border-gray-100 overflow-hidden">
+                        <div className="rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="bg-gray-50/50">
+                                    <TableRow className="bg-gray-50/50 dark:bg-gray-800/50">
                                         <TableHead>Nombre</TableHead>
                                         <TableHead>Contacto</TableHead>
                                         <TableHead>Teléfono</TableHead>
@@ -189,7 +190,7 @@ export default function Index({ suppliers, filters }) {
                                 <TableBody>
                                     {suppliers.data.map((supplier) => (
                                         <TableRow key={supplier.id}>
-                                            <TableCell className="font-medium text-gray-900">
+                                            <TableCell className="font-medium text-gray-900 dark:text-gray-100">
                                                 {supplier.name}
                                             </TableCell>
                                             <TableCell>
@@ -199,7 +200,7 @@ export default function Index({ suppliers, filters }) {
                                                         <span className="text-sm">{supplier.contact_email}</span>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-gray-400 text-sm">—</span>
+                                                    <span className="text-gray-400 dark:text-gray-500 text-sm">—</span>
                                                 )}
                                             </TableCell>
                                             <TableCell>
@@ -209,7 +210,7 @@ export default function Index({ suppliers, filters }) {
                                                         <span className="text-sm">{supplier.phone}</span>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-gray-400 text-sm">—</span>
+                                                    <span className="text-gray-400 dark:text-gray-500 text-sm">—</span>
                                                 )}
                                             </TableCell>
                                             <TableCell className="text-center">
@@ -227,7 +228,7 @@ export default function Index({ suppliers, filters }) {
                                                     <DropdownMenuTrigger asChild>
                                                         <button
                                                             type="button"
-                                                            className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+                                                            className="inline-flex items-center justify-center rounded-lg p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                                                         >
                                                             <MoreHorizontal className="h-4 w-4" />
                                                             <span className="sr-only">Abrir menú</span>
@@ -260,9 +261,9 @@ export default function Index({ suppliers, filters }) {
 
                     {/* Paginación */}
                     {suppliers.total > 0 && (
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-100">
-                            <p className="text-sm text-gray-500">
-                                Mostrando <span className="font-medium text-gray-700">{suppliers.from}</span> a <span className="font-medium text-gray-700">{suppliers.to}</span> de <span className="font-medium text-gray-700">{suppliers.total}</span> resultados
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-100 dark:border-gray-800">
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Mostrando <span className="font-medium text-gray-700 dark:text-gray-300">{suppliers.from}</span> a <span className="font-medium text-gray-700 dark:text-gray-300">{suppliers.to}</span> de <span className="font-medium text-gray-700 dark:text-gray-300">{suppliers.total}</span> resultados
                             </p>
                             {suppliers.last_page > 1 && (
                                 <div className="flex items-center gap-1">

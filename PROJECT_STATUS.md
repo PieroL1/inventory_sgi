@@ -10,7 +10,31 @@
 
 Sistema monolítico modular para **control de stock, proveedores, movimientos de inventario y valorización**.
 
-Principios del proyecto:
+### 1.1 Alcance del Sistema
+
+**LO QUE ES:**
+- Sistema de gestión de inventario interno para control de stock.
+- Registro manual de movimientos (entradas, salidas, ajustes).
+- Valorización y reportes de inventario.
+- Alertas de stock bajo.
+
+**LO QUE NO ES:**
+- No es un punto de venta (POS).
+- No procesa transacciones de compra/venta.
+- No maneja métodos de pago ni dinero.
+- No tiene carrito de compras ni checkout.
+
+### 1.2 Flujo de Movimientos de Stock
+
+| Tipo | Descripción | Ejemplo de uso |
+|------|-------------|----------------|
+| `entry` | Entrada de mercancía | Llegó pedido del proveedor |
+| `exit` | Salida de mercancía | Se vendió en tienda física (registro manual) |
+| `adjustment` | Ajuste por inventario | Diferencia detectada en conteo físico |
+
+> **Nota:** Las salidas por ventas se registran manualmente. El empleado anota la salida después de que la venta ocurre en otro sistema o en efectivo.
+
+### 1.3 Principios del Proyecto
 - Código limpio, tipado (donde aplique) y bien documentado.
 - Facilitar mantenimiento por humanos y lectura por IAs.
 - Sin API REST tradicional: usamos **Inertia.js** para comunicación frontend-backend.
@@ -76,9 +100,23 @@ Principios del proyecto:
 
 | Campo | Valor |
 |-------|-------|
-| **Fase actual** | Fase 2: CRUDs Básicos |
-| **Última actualización** | 2025-12-29 - Búsqueda y paginación implementadas |
+| **Fase actual** | Fase 3: Lógica de Inventario |
+| **Rama Git activa** | `feature/fase-3-inventario` |
+| **Última actualización** | 2025-12-30 - Modo oscuro implementado, sidebar colapsable, mejoras responsive |
 | **Bloqueadores** | Ninguno |
+
+### 5.1 Estrategia de Ramas Git
+
+| Rama | Propósito | Estado |
+|------|-----------|--------|
+| `main` | Versión estable de producción | Fase 2 completada |
+| `feature/fase-3-inventario` | Desarrollo de Fase 3 | En progreso |
+
+**Flujo de trabajo:**
+1. `main` solo contiene código estable y probado (puntos de release por fase).
+2. Cada fase se desarrolla en su rama `feature/fase-X-nombre`.
+3. Al completar una fase, se hace merge a `main` y se crea tag de versión.
+4. Nunca se pushea directamente a `main`.
 
 ---
 
@@ -128,13 +166,13 @@ Principios del proyecto:
 
 ---
 
-### [ ] Fase 2: CRUDs Básicos
+### [x] Fase 2: CRUDs Básicos
 - [x] CRUD Categorías (Controller, páginas Inertia, validación).
 - [x] CRUD Proveedores.
 - [x] CRUD Productos (con selects de categoría y proveedor).
 - [x] Corregir dropdown de acciones (Editar/Eliminar).
 - [x] Implementar búsqueda y paginación básica.
-- [ ] Mejorar diseño UI.
+- [x] Mejorar diseño UI.
 
 **Bitácora F2:**
 - (29-dic) CategoryController, SupplierController, ProductController creados.
@@ -152,17 +190,73 @@ Principios del proyecto:
   - Suppliers: búsqueda por nombre/email/teléfono + filtro estado.
   - Products: búsqueda por nombre/SKU/descripción + filtros por categoría, proveedor, estado y stock bajo.
   - Paginación mejorada con números de página clickeables y `withQueryString()` para preservar filtros.
+- (29-dic) **REDISEÑO UI COMPLETO:**
+  - Nuevo tema en `app.css` con colores oklch vibrantes y glassmorphism.
+  - AuthenticatedLayout rediseñado: sidebar oscuro fijo + top bar con glassmorphism.
+  - Elementos decorativos de fondo (círculos difuminados con gradientes).
+  - Componentes actualizados: Button (variantes con sombras), Badge (success/warning), Input (glassmorphism), Table (hover mejorado), Card (backdrop-blur).
+  - Páginas Index rediseñadas para Categories, Suppliers, Products (header con icono gradiente, filtros mejorados).
+  - Menú de usuario en sidebar con dropdown (Mi Perfil, Cerrar Sesión).
+  - Menú de notificaciones funcional en top bar.
+  - Dashboard completamente nuevo con: 4 tarjetas de estadísticas, productos con stock bajo, productos recientes, top 5 productos por valor, accesos rápidos con gradientes.
+  - DashboardController creado para enviar estadísticas al frontend.
+- (29-dic) **FASE 2 COMPLETADA**
 
 ---
 
-### [ ] Fase 3: Lógica de Inventario
-- [ ] Migración: `stock_movements` (id, product_id, type [entry/exit/adjustment], quantity, reason, user_id, timestamps).
-- [ ] Servicio `StockService` para registrar movimientos.
-- [ ] Actualización automática de `stock_quantity` en productos.
-- [ ] Alertas de stock bajo (cuando `stock_quantity < min_stock`).
+### [x] Fase 3: Lógica de Inventario
+- [x] Migración: `stock_movements` (id, product_id, type [entry/exit/adjustment], quantity, reason, user_id, timestamps).
+- [x] Modelo `StockMovement` con relaciones, casts y scopes para filtrar por tipo.
+- [x] Servicio `StockService` para registrar movimientos.
+- [x] Actualización automática de `stock_quantity` en productos.
+- [x] Controller `StockMovementController` con páginas Inertia (Index, Create).
+- [x] Validación de stock negativo en salidas.
+- [x] Enlace "Movimientos" en navegación con icono ArrowLeftRight.
+- [x] Alertas de stock bajo (cuando `stock_quantity < min_stock`).
+- [x] Sidebar colapsable en desktop con persistencia en localStorage.
+- [x] Mejoras responsive para móvil y tablet.
+- [x] **Modo Oscuro (Dark Mode)** completo con toggle en menú de usuario.
 
 **Bitácora F3:**
-- *(pendiente)*
+- (30-dic) Creada migración `stock_movements` con índices en product_id, user_id, type, created_at.
+- (30-dic) Modelo `StockMovement` con constantes TYPE_ENTRY/EXIT/ADJUSTMENT, scopes ofType(), entries(), exits(), adjustments().
+- (30-dic) Servicio `StockService` en app/Services/ con métodos registerMovement(), registerEntry(), registerExit(), registerAdjustment().
+- (30-dic) Validación transaccional: el servicio usa DB::transaction() para garantizar integridad entre movimiento y actualización de stock.
+- (30-dic) StockMovementController con index (filtros por producto, tipo, fechas) y create.
+- (30-dic) StockMovementRequest con validación y mensajes en español.
+- (30-dic) StockMovementFactory con estados entry(), exit(), adjustment() para testing.
+- (30-dic) Páginas React: StockMovements/Index.jsx (listado con filtros, paginación, badges de tipo), StockMovements/Create.jsx (selección visual de tipo, preview de stock proyectado, validación de stock negativo en frontend).
+- (30-dic) Navegación actualizada en AuthenticatedLayout.jsx con enlace a Movimientos.
+- (30-dic) **ProductCombobox creado:** Componente con búsqueda integrada para seleccionar productos (filtra por SKU y nombre), con dropdown estilizado y soporte para cmdk.
+- (30-dic) **Sistema de alertas de stock bajo implementado:**
+  - Badge en navegación (sidebar) que muestra contador de productos con stock bajo.
+  - Middleware HandleInertiaRequests modificado para compartir `alerts.lowStockCount` globalmente.
+  - Alerta warning al registrar movimiento que deja producto con stock bajo (toast notification via Sonner).
+  - StockService retorna información adicional (lowStockAlert, productName, newStock, minStock) después de cada movimiento.
+  - Banner prominente en Dashboard cuando hay productos con stock bajo (gradiente ámbar/naranja con botón de acción).
+  - Botón "Stock bajo" mejorado en listado de Productos (color ámbar cuando activo, muestra contador).
+  - **Notificaciones en ícono de campana:** Dropdown con lista de hasta 5 productos con stock bajo, cada uno con enlace directo para agregar movimiento. Badge con contador en el ícono.
+  - **Toasts mejorados:** Configuración de Sonner con `expand={true}` para que los toasts se apilen verticalmente sin superponerse.
+- (30-dic) **FASE 3 COMPLETADA**
+- (30-dic) **Sidebar colapsable implementado:**
+  - Botón "Colapsar" en sidebar que reduce el ancho de 72 a 20 (solo iconos).
+  - Estado persistido en localStorage para mantener preferencia del usuario.
+  - Iconos PanelLeftClose/PanelLeft de lucide-react.
+  - Badges de stock bajo se muestran como indicador pequeño cuando está colapsado.
+- (30-dic) **Mejoras responsive:**
+  - Sidebar móvil con altura completa (fixed inset-y-0).
+  - Headers de páginas con truncate y textos responsive (hidden sm:inline).
+  - Filtros en grid responsive para tablets (648-699px).
+- (30-dic) **MODO OSCURO (DARK MODE) IMPLEMENTADO:**
+  - Hook `useTheme` creado en `/hooks/useTheme.js` con persistencia en localStorage.
+  - Toggle de tema en menú de usuario (sidebar, móvil y top bar) con botones Claro/Oscuro.
+  - Variables CSS ya configuradas en `app.css` para `:root` (claro) y `.dark` (oscuro).
+  - Componentes actualizados con clases `dark:`: Card, Badge, Table, Input, Button, Select, Textarea, Label, DropdownMenu.
+  - Todas las páginas Index (Dashboard, Categories, Suppliers, Products, StockMovements) con soporte dark.
+  - Formularios Create/Edit con headers adaptados.
+  - Glassmorphism adaptado: `.glass` y `.glass-card` con variantes dark.
+  - Gradiente de fondo `.bg-gradient-main` con versión oscura.
+  - Sidebar mantiene diseño oscuro en ambos modos (contraste consistente como apps profesionales).
 
 ---
 
@@ -185,6 +279,25 @@ Principios del proyecto:
 - [ ] Documentación final de uso.
 
 **Bitácora F5:**
+- *(pendiente)*
+
+---
+
+### [ ] Fase 6: API para Integraciones (Opcional)
+> **Nota:** Esta fase es opcional y está pensada para expansión futura. El sistema SGI funciona completamente sin ella.
+
+- [ ] Crear endpoints REST API para productos (`GET /api/products`, `POST /api/stock-movements`).
+- [ ] Autenticación API con Laravel Sanctum (tokens).
+- [ ] Endpoint para registrar salidas de stock desde sistemas externos.
+- [ ] Webhook opcional para notificar cambios de stock.
+- [ ] Documentación de API (OpenAPI/Swagger o similar).
+
+**Casos de uso potenciales:**
+- Tienda online (WooCommerce, Shopify, custom) que descuenta stock al vender.
+- App móvil para consultar inventario en tiempo real.
+- Integración con sistemas de facturación o ERP.
+
+**Bitácora F6:**
 - *(pendiente)*
 
 ---
