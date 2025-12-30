@@ -31,18 +31,21 @@
     /* Colores de éxito - Verde fresco */
     --color-success-50: oklch(0.97 0.02 155);
     --color-success-100: oklch(0.94 0.04 155);
+    --color-success-200: oklch(0.88 0.08 155);
     --color-success-500: oklch(0.70 0.18 155);
     --color-success-600: oklch(0.60 0.16 155);
 
     /* Colores de advertencia - Ámbar cálido */
     --color-warning-50: oklch(0.98 0.02 85);
     --color-warning-100: oklch(0.95 0.05 85);
+    --color-warning-200: oklch(0.90 0.08 85);
     --color-warning-500: oklch(0.80 0.16 85);
     --color-warning-600: oklch(0.70 0.15 85);
 
     /* Colores de error - Rojo coral */
     --color-danger-50: oklch(0.97 0.02 25);
     --color-danger-100: oklch(0.94 0.04 25);
+    --color-danger-200: oklch(0.88 0.08 25);
     --color-danger-500: oklch(0.65 0.20 25);
     --color-danger-600: oklch(0.55 0.18 25);
 }

@@ -89,6 +89,34 @@ export default function Dashboard({ stats, lowStockProducts, recentProducts, top
             <Head title="Dashboard" />
 
             <div className="space-y-6">
+                {/* Alerta de stock bajo prominente */}
+                {stats.lowStock?.count > 0 && (
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 p-4 shadow-lg shadow-amber-500/25">
+                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
+                        <div className="relative flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur">
+                                    <AlertTriangle className="h-6 w-6 text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-white">
+                                        ¡Atención! {stats.lowStock.count} producto{stats.lowStock.count !== 1 ? 's' : ''} con stock bajo
+                                    </h3>
+                                    <p className="text-sm text-white/80">
+                                        Revisa el inventario y realiza los pedidos necesarios a tus proveedores.
+                                    </p>
+                                </div>
+                            </div>
+                            <Link href={route('products.index') + '?low_stock=1'}>
+                                <Button className="bg-white text-amber-600 hover:bg-white/90 gap-2 shadow-lg">
+                                    Ver productos
+                                    <ArrowRight className="h-4 w-4" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                )}
+
                 {/* Tarjetas de estadísticas */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {statCards.map((stat, index) => (

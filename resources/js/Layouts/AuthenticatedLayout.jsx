@@ -6,12 +6,14 @@ import {
     FolderTree,
     Truck,
     Package,
+    ArrowLeftRight,
     LogOut,
     Menu,
     X,
     ChevronDown,
     User,
     Bell,
+    AlertTriangle,
 } from 'lucide-react';
 import {
     DropdownMenu,
@@ -26,7 +28,10 @@ import {
  * Diseño moderno con sidebar y glassmorphism.
  */
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
+    const { auth, alerts } = usePage().props;
+    const user = auth.user;
+    const lowStockCount = alerts?.lowStockCount || 0;
+    const lowStockProducts = alerts?.lowStockProducts || [];
     useFlashMessages();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,7 +40,8 @@ export default function AuthenticatedLayout({ header, children }) {
         { name: 'Dashboard', href: route('dashboard'), icon: LayoutDashboard, current: route().current('dashboard') },
         { name: 'Categorías', href: route('categories.index'), icon: FolderTree, current: route().current('categories.*') },
         { name: 'Proveedores', href: route('suppliers.index'), icon: Truck, current: route().current('suppliers.*') },
-        { name: 'Productos', href: route('products.index'), icon: Package, current: route().current('products.*') },
+        { name: 'Productos', href: route('products.index'), icon: Package, current: route().current('products.*'), badge: lowStockCount > 0 ? lowStockCount : null, badgeType: 'warning' },
+        { name: 'Movimientos', href: route('stock-movements.index'), icon: ArrowLeftRight, current: route().current('stock-movements.*') },
     ];
 
     return (
@@ -86,7 +92,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                     }`}
                                 >
                                     <item.icon className={`h-5 w-5 ${item.current ? 'text-sidebar-primary' : ''}`} />
-                                    {item.name}
+                                    <span className="flex-1">{item.name}</span>
+                                    {item.badge && (
+                                        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1.5 text-xs font-bold text-white">
+                                            {item.badge}
+                                        </span>
+                                    )}
                                 </Link>
                             ))}
                         </nav>
@@ -174,7 +185,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                 <item.icon className={`h-5 w-5 transition-colors ${
                                     item.current ? 'text-sidebar-primary' : 'text-sidebar-foreground/50 group-hover:text-sidebar-foreground/70'
                                 }`} />
-                                {item.name}
+                                <span className="flex-1">{item.name}</span>
+                                {item.badge && (
+                                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1.5 text-xs font-bold text-white shadow-sm">
+                                        {item.badge}
+                                    </span>
+                                )}
                             </Link>
                         ))}
                     </nav>
@@ -256,19 +272,65 @@ export default function AuthenticatedLayout({ header, children }) {
                                 <DropdownMenuTrigger asChild>
                                     <button className="relative p-2.5 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors">
                                         <Bell className="h-5 w-5" />
-                                        <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary-500 ring-2 ring-white" />
+                                        {lowStockCount > 0 && (
+                                            <span className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+                                                {lowStockCount > 9 ? '9+' : lowStockCount}
+                                            </span>
+                                        )}
                                     </button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-80">
-                                    <div className="px-4 py-3 border-b border-gray-100">
+                                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                                         <p className="text-sm font-semibold text-gray-900">Notificaciones</p>
+                                        {lowStockCount > 0 && (
+                                            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-100 px-2 text-xs font-medium text-amber-700">
+                                                {lowStockCount}
+                                            </span>
+                                        )}
                                     </div>
-                                    <div className="py-6 px-4 text-center">
-                                        <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-gray-100 mb-3">
-                                            <Bell className="h-6 w-6 text-gray-400" />
+                                    {lowStockProducts.length > 0 ? (
+                                        <div className="py-2 max-h-80 overflow-y-auto">
+                                            <div className="px-4 py-2">
+                                                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Stock Bajo</p>
+                                            </div>
+                                            {lowStockProducts.map((product) => (
+                                                <Link
+                                                    key={product.id}
+                                                    href={route('stock-movements.create') + `?product_id=${product.id}`}
+                                                    className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100">
+                                                        <AlertTriangle className="h-4 w-4 text-amber-600" />
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
+                                                        <p className="text-xs text-gray-500">{product.sku}</p>
+                                                        <p className="text-xs text-amber-600 font-medium mt-0.5">
+                                                            Stock: {product.stock_quantity} / Mín: {product.min_stock}
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                            {lowStockCount > 5 && (
+                                                <div className="px-4 py-2 border-t border-gray-100">
+                                                    <Link
+                                                        href={route('products.index') + '?low_stock=1'}
+                                                        className="text-xs text-primary-600 hover:text-primary-700 font-medium"
+                                                    >
+                                                        Ver todos los {lowStockCount} productos →
+                                                    </Link>
+                                                </div>
+                                            )}
                                         </div>
-                                        <p className="text-sm text-gray-500">No tienes notificaciones nuevas</p>
-                                    </div>
+                                    ) : (
+                                        <div className="py-6 px-4 text-center">
+                                            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-full bg-emerald-100 mb-3">
+                                                <Package className="h-6 w-6 text-emerald-600" />
+                                            </div>
+                                            <p className="text-sm font-medium text-gray-900">¡Todo en orden!</p>
+                                            <p className="text-xs text-gray-500 mt-1">No hay productos con stock bajo</p>
+                                        </div>
+                                    )}
                                 </DropdownMenuContent>
                             </DropdownMenu>
 

@@ -215,10 +215,15 @@ export default function Index({ products, categories, suppliers, filters }) {
                             <Button
                                 variant={lowStock ? 'default' : 'outline'}
                                 onClick={handleLowStockToggle}
-                                className="gap-2"
+                                className={`gap-2 ${lowStock ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/25' : ''}`}
                             >
                                 <AlertTriangle className="h-4 w-4" />
                                 Stock bajo
+                                {lowStock && (
+                                    <span className="ml-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1.5 text-xs font-bold">
+                                        {products.total}
+                                    </span>
+                                )}
                             </Button>
                         </div>
                     </div>
