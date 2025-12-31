@@ -100,17 +100,17 @@ Sistema monolítico modular para **control de stock, proveedores, movimientos de
 
 | Campo | Valor |
 |-------|-------|
-| **Fase actual** | Fase 4: Valorización y Reporting ✅ |
-| **Rama Git activa** | `feature/fase-4-valorizacion` |
-| **Última actualización** | 2025-12-30 - Fase 4 completada |
+| **Fase actual** | Fase 5: Roles, Permisos y Refinamiento 🔄 |
+| **Rama Git activa** | `feature/fase-5-roles-refinamiento` |
+| **Última actualización** | 2025-12-30 - Inicio Fase 5 |
 | **Bloqueadores** | Ninguno |
 
 ### 5.1 Estrategia de Ramas Git
 
 | Rama | Propósito | Estado |
 |------|-----------|--------|
-| `main` | Versión estable de producción | Fase 3 completada |
-| `feature/fase-4-valorizacion` | Desarrollo de Fase 4 | En progreso |
+| `main` | Versión estable de producción | Fase 4 completada |
+| `feature/fase-5-roles-refinamiento` | Desarrollo de Fase 5 | En progreso |
 
 **Flujo de trabajo:**
 1. `main` solo contiene código estable y probado (puntos de release por fase).
@@ -292,14 +292,34 @@ Sistema monolítico modular para **control de stock, proveedores, movimientos de
 ---
 
 ### [ ] Fase 5: Roles, Permisos y Refinamiento
-- [ ] Implementar roles básicos (admin, operador, viewer) con Spatie Permission o similar.
-- [ ] Restringir acciones según rol.
-- [ ] Refinar UI/UX general.
+- [x] Implementar roles básicos con Spatie Laravel-Permission:
+  - [x] Rol `admin`: Acceso total (CRUD completo, configuración, usuarios).
+  - [x] Rol `operator`: Gestión de inventario (productos, movimientos, proveedores).
+  - [x] Rol `viewer`: Solo lectura (ver listados, reportes, exportar).
+- [x] Middleware y gates para restringir acciones según rol.
+- [x] UI adaptativa: ocultar/mostrar botones según permisos.
+- [x] Página de gestión de usuarios (solo admin).
+- [ ] Refinar UI/UX general:
+  - [ ] Revisar consistencia de dark mode en todos los componentes.
+  - [ ] Mejorar feedback visual (loading states, confirmaciones).
+  - [ ] Tooltips en iconos y acciones.
 - [ ] Tests de integración para flujos críticos.
-- [ ] Documentación final de uso.
+- [ ] Documentación de uso (README actualizado).
 
 **Bitácora F5:**
-- *(pendiente)*
+- (30-dic) Rama `feature/fase-5-roles-refinamiento` creada desde `main`.
+- (30-dic) Instalado Spatie Laravel-Permission v6.24.
+- (30-dic) Creado `RolePermissionSeeder` con 3 roles (admin, operator, viewer) y 20 permisos.
+- (30-dic) Modelo User actualizado con trait `HasRoles`.
+- (30-dic) Middleware `CheckPermission` creado y registrado en bootstrap/app.php.
+- (30-dic) `HandleInertiaRequests` actualizado para compartir roles y permisos al frontend.
+- (30-dic) Hook `usePermissions` creado para verificar permisos en React.
+- (30-dic) Rutas protegidas con middleware `permission:` según acción.
+- (30-dic) `UserController` creado con CRUD completo para gestión de usuarios.
+- (30-dic) Páginas React: Users/Index, Users/Create, Users/Edit.
+- (30-dic) Navegación del sidebar filtrada por permisos.
+- (30-dic) Botones de acción (Nuevo, Editar, Eliminar, Exportar) condicionados por permisos.
+- (30-dic) Comando Artisan `user:assign-role` creado para asignar roles.
 
 ---
 

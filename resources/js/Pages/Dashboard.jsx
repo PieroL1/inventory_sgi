@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import {
     ArrowUpCircle,
     RefreshCw,
     ArrowLeftRight,
+    Calendar,
 } from 'lucide-react';
 import {
     BarChart,
@@ -31,9 +32,33 @@ import {
 } from 'recharts';
 
 /**
+ * Tooltip personalizado para el gráfico con soporte dark mode.
+ */
+const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+                <p className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{label}</p>
+                {payload.map((entry, index) => (
+                    <div key={index} className="flex items-center gap-2 text-sm">
+                        <div 
+                            className="w-3 h-3 rounded-sm" 
+                            style={{ backgroundColor: entry.color }}
+                        />
+                        <span className="text-gray-600 dark:text-gray-400">{entry.name}:</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">{entry.value}</span>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+    return null;
+};
+
+/**
  * Dashboard principal del Sistema de Gestión de Inventario.
  */
-export default function Dashboard({ stats, lowStockProducts, recentProducts, topValueProducts, movementsByDay, recentMovements }) {
+export default function Dashboard({ stats, lowStockProducts, recentProducts, topValueProducts, movementsByDay, recentMovements, chartDays = 7 }) {
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('es-MX', {
             style: 'currency',
@@ -260,19 +285,44 @@ export default function Dashboard({ stats, lowStockProducts, recentProducts, top
                     {/* Gráfico de movimientos */}
                     <Card className="lg:col-span-2">
                         <CardHeader className="pb-3">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between flex-wrap gap-2">
                                 <CardTitle className="flex items-center gap-2 text-base font-semibold">
                                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/50">
                                         <BarChart3 className="h-4 w-4 text-violet-600 dark:text-violet-400" />
                                     </div>
-                                    Movimientos (Últimos 7 días)
+                                    Movimientos ({chartDays === 7 ? 'Últimos 7 días' : 'Último mes'})
                                 </CardTitle>
-                                <Link href={route('stock-movements.index')}>
-                                    <Button variant="ghost" size="sm" className="gap-1 text-xs">
-                                        Ver todos
-                                        <ArrowRight className="h-3 w-3" />
-                                    </Button>
-                                </Link>
+                                <div className="flex items-center gap-2">
+                                    {/* Selector de período */}
+                                    <div className="flex items-center gap-1 p-1 rounded-lg bg-gray-100 dark:bg-gray-800">
+                                        <button
+                                            onClick={() => router.get(route('dashboard'), { chart_days: 7 }, { preserveState: true, preserveScroll: true })}
+                                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                                                chartDays === 7 
+                                                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm' 
+                                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                                            }`}
+                                        >
+                                            7 días
+                                        </button>
+                                        <button
+                                            onClick={() => router.get(route('dashboard'), { chart_days: 30 }, { preserveState: true, preserveScroll: true })}
+                                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                                                chartDays === 30 
+                                                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm' 
+                                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                                            }`}
+                                        >
+                                            30 días
+                                        </button>
+                                    </div>
+                                    <Link href={route('stock-movements.index')}>
+                                        <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                                            Ver todos
+                                            <ArrowRight className="h-3 w-3" />
+                                        </Button>
+                                    </Link>
+                                </div>
                             </div>
                         </CardHeader>
                         <CardContent className="pt-0">
@@ -283,25 +333,25 @@ export default function Dashboard({ stats, lowStockProducts, recentProducts, top
                                             <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
                                             <XAxis 
                                                 dataKey="label" 
-                                                tick={{ fontSize: 12 }}
-                                                className="text-gray-600 dark:text-gray-400"
+                                                tick={{ fontSize: 11, fill: 'currentColor' }}
+                                                className="text-gray-500 dark:text-gray-400"
+                                                tickLine={false}
+                                                axisLine={{ stroke: 'currentColor', strokeOpacity: 0.2 }}
                                             />
                                             <YAxis 
-                                                tick={{ fontSize: 12 }}
-                                                className="text-gray-600 dark:text-gray-400"
+                                                tick={{ fontSize: 11, fill: 'currentColor' }}
+                                                className="text-gray-500 dark:text-gray-400"
                                                 allowDecimals={false}
+                                                tickLine={false}
+                                                axisLine={{ stroke: 'currentColor', strokeOpacity: 0.2 }}
                                             />
                                             <Tooltip 
-                                                contentStyle={{
-                                                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                                                    border: '1px solid #e5e7eb',
-                                                    borderRadius: '8px',
-                                                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                                }}
-                                                labelStyle={{ fontWeight: 600 }}
+                                                content={<CustomTooltip />} 
+                                                cursor={{ fill: 'rgba(107, 114, 128, 0.15)' }}
                                             />
                                             <Legend 
                                                 wrapperStyle={{ paddingTop: '10px' }}
+                                                formatter={(value) => <span className="text-gray-700 dark:text-gray-300 text-sm">{value}</span>}
                                             />
                                             <Bar 
                                                 dataKey="entries" 

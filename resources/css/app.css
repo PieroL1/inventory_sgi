@@ -219,8 +219,14 @@
 
 .shadow-glow {
     box-shadow:
-        0 0 20px oklch(0.55 0.22 250 / 15%),
-        0 4px 12px oklch(0.20 0.02 250 / 10%);
+        0 0 15px oklch(0.55 0.22 250 / 12%),
+        0 4px 8px oklch(0.20 0.02 250 / 8%);
+}
+
+.dark .shadow-glow {
+    box-shadow:
+        0 0 10px oklch(0.55 0.22 250 / 20%),
+        0 2px 6px oklch(0.10 0.02 250 / 15%);
 }
 
 /* Hover effects */
@@ -255,7 +261,11 @@
 .sidebar-item-active::before {
     content: '';
     @apply absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-500 rounded-r-full;
-    box-shadow: 0 0 12px oklch(0.55 0.22 250 / 50%);
+    box-shadow: 0 0 8px oklch(0.55 0.22 250 / 40%);
+}
+
+.dark .sidebar-item-active::before {
+    box-shadow: 0 0 6px oklch(0.60 0.20 250 / 35%);
 }
 
 /* Badge variants mejorados */

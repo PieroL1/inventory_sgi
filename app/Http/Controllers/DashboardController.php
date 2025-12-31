@@ -14,8 +14,12 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        // Período para el gráfico de movimientos (7 o 30 días)
+        $chartDays = $request->input('chart_days', 7);
+        $chartDays = in_array($chartDays, [7, 30]) ? $chartDays : 7;
+        
         // Estadísticas generales
         $stats = [
             'products' => [
@@ -60,8 +64,8 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // Movimientos de los últimos 7 días para el gráfico
-        $movementsByDay = $this->getMovementsByDay(7);
+        // Movimientos para el gráfico (según período seleccionado)
+        $movementsByDay = $this->getMovementsByDay($chartDays);
 
         // Movimientos recientes
         $recentMovements = StockMovement::with(['product', 'user'])
@@ -76,6 +80,7 @@ class DashboardController extends Controller
             'topValueProducts' => $topValueProducts,
             'movementsByDay' => $movementsByDay,
             'recentMovements' => $recentMovements,
+            'chartDays' => $chartDays,
         ]);
     }
 

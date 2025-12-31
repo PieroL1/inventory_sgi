@@ -27,11 +27,13 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Plus, MoreHorizontal, Pencil, Trash2, Truck, Mail, Phone, Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { usePermissions } from '@/hooks/usePermissions';
 
 /**
  * Página de listado de proveedores.
  */
 export default function Index({ suppliers, filters }) {
+    const { can } = usePermissions();
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status ?? '');
 
@@ -95,13 +97,15 @@ export default function Index({ suppliers, filters }) {
                             <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{suppliers.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('suppliers.create')} className="shrink-0">
-                        <Button className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            <span className="hidden sm:inline">Nuevo Proveedor</span>
-                            <span className="sm:hidden">Nuevo</span>
-                        </Button>
-                    </Link>
+                    {can('suppliers.create') && (
+                        <Link href={route('suppliers.create')} className="shrink-0">
+                            <Button className="gap-2">
+                                <Plus className="h-4 w-4" />
+                                <span className="hidden sm:inline">Nuevo Proveedor</span>
+                                <span className="sm:hidden">Nuevo</span>
+                            </Button>
+                        </Link>
+                    )}
                 </div>
             }
         >
@@ -235,20 +239,24 @@ export default function Index({ suppliers, filters }) {
                                                         </button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-48">
-                                                        <DropdownMenuItem
-                                                            onClick={() => router.visit(route('suppliers.edit', supplier.id))}
-                                                            className="gap-2"
-                                                        >
-                                                            <Pencil className="h-4 w-4" />
-                                                            Editar
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleDelete(supplier)}
-                                                            className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                            Eliminar
-                                                        </DropdownMenuItem>
+                                                        {can('suppliers.edit') && (
+                                                            <DropdownMenuItem
+                                                                onClick={() => router.visit(route('suppliers.edit', supplier.id))}
+                                                                className="gap-2"
+                                                            >
+                                                                <Pencil className="h-4 w-4" />
+                                                                Editar
+                                                            </DropdownMenuItem>
+                                                        )}
+                                                        {can('suppliers.delete') && (
+                                                            <DropdownMenuItem
+                                                                onClick={() => handleDelete(supplier)}
+                                                                className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                                Eliminar
+                                                            </DropdownMenuItem>
+                                                        )}
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </TableCell>

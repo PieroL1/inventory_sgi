@@ -32,11 +32,13 @@ import {
 } from 'lucide-react';
 import { DatePicker } from '@/Components/DatePicker';
 import { ProductFilterCombobox } from '@/Components/ProductFilterCombobox';
+import { usePermissions } from '@/hooks/usePermissions';
 
 /**
  * Página de listado de movimientos de stock.
  */
 export default function Index({ movements, products, types, filters }) {
+    const { can } = usePermissions();
     const [product, setProduct] = useState(filters.product || '');
     const [type, setType] = useState(filters.type || '');
     const [dateFrom, setDateFrom] = useState(filters.date_from || '');
@@ -143,27 +145,31 @@ export default function Index({ movements, products, types, filters }) {
                         </div>
                     </div>
                     <div className="flex gap-2 shrink-0">
-                        <a
-                            href={route('export.movements', {
-                                product: filters.product || undefined,
-                                type: filters.type || undefined,
-                                date_from: filters.date_from || undefined,
-                                date_to: filters.date_to || undefined,
-                            })}
-                            className="hidden sm:block"
-                        >
-                            <Button variant="outline" className="gap-2">
-                                <Download className="h-4 w-4" />
-                                Exportar CSV
-                            </Button>
-                        </a>
-                        <Link href={route('stock-movements.create')}>
-                            <Button className="gap-2">
-                                <Plus className="h-4 w-4" />
-                                <span className="hidden sm:inline">Nuevo Movimiento</span>
-                                <span className="sm:hidden">Nuevo</span>
-                            </Button>
-                        </Link>
+                        {can('movements.export') && (
+                            <a
+                                href={route('export.movements', {
+                                    product: filters.product || undefined,
+                                    type: filters.type || undefined,
+                                    date_from: filters.date_from || undefined,
+                                    date_to: filters.date_to || undefined,
+                                })}
+                                className="hidden sm:block"
+                            >
+                                <Button variant="outline" className="gap-2">
+                                    <Download className="h-4 w-4" />
+                                    Exportar CSV
+                                </Button>
+                            </a>
+                        )}
+                        {can('movements.create') && (
+                            <Link href={route('stock-movements.create')}>
+                                <Button className="gap-2">
+                                    <Plus className="h-4 w-4" />
+                                    <span className="hidden sm:inline">Nuevo Movimiento</span>
+                                    <span className="sm:hidden">Nuevo</span>
+                                </Button>
+                            </Link>
+                        )}
                     </div>
                 </div>
             }

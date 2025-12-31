@@ -27,12 +27,14 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Plus, MoreHorizontal, Pencil, Trash2, FolderTree, Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { usePermissions } from '@/hooks/usePermissions';
 
 /**
  * Página de listado de categorías.
  * Diseño moderno con glassmorphism y animaciones sutiles.
  */
 export default function Index({ categories, filters }) {
+    const { can } = usePermissions();
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status ?? '');
 
@@ -96,13 +98,15 @@ export default function Index({ categories, filters }) {
                             <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{categories.total} registros</p>
                         </div>
                     </div>
-                    <Link href={route('categories.create')} className="shrink-0">
-                        <Button className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            <span className="hidden sm:inline">Nueva Categoría</span>
-                            <span className="sm:hidden">Nueva</span>
-                        </Button>
-                    </Link>
+                    {can('categories.create') && (
+                        <Link href={route('categories.create')} className="shrink-0">
+                            <Button className="gap-2">
+                                <Plus className="h-4 w-4" />
+                                <span className="hidden sm:inline">Nueva Categoría</span>
+                                <span className="sm:hidden">Nueva</span>
+                            </Button>
+                        </Link>
+                    )}
                 </div>
             }
         >
@@ -228,20 +232,24 @@ export default function Index({ categories, filters }) {
                                                         </button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-48">
-                                                        <DropdownMenuItem
-                                                            onClick={() => router.visit(route('categories.edit', category.id))}
-                                                            className="gap-2"
-                                                        >
-                                                            <Pencil className="h-4 w-4" />
-                                                            Editar
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleDelete(category)}
-                                                            className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                            Eliminar
-                                                        </DropdownMenuItem>
+                                                        {can('categories.edit') && (
+                                                            <DropdownMenuItem
+                                                                onClick={() => router.visit(route('categories.edit', category.id))}
+                                                                className="gap-2"
+                                                            >
+                                                                <Pencil className="h-4 w-4" />
+                                                                Editar
+                                                            </DropdownMenuItem>
+                                                        )}
+                                                        {can('categories.delete') && (
+                                                            <DropdownMenuItem
+                                                                onClick={() => handleDelete(category)}
+                                                                className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                                Eliminar
+                                                            </DropdownMenuItem>
+                                                        )}
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </TableCell>

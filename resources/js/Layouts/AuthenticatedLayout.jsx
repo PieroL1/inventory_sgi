@@ -1,6 +1,7 @@
 import { useFlashMessages } from '@/hooks/useFlashMessages';
 import { useTheme } from '@/hooks/useTheme';
-import { Link, usePage } from '@inertiajs/react';
+import { usePermissions } from '@/hooks/usePermissions';
+import { Link, usePage, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import {
     LayoutDashboard,
@@ -20,6 +21,7 @@ import {
     Sun,
     Moon,
     Monitor,
+    Users,
 } from 'lucide-react';
 import {
     DropdownMenu,
@@ -40,6 +42,7 @@ export default function AuthenticatedLayout({ header, children }) {
     const lowStockProducts = alerts?.lowStockProducts || [];
     useFlashMessages();
     const { theme, toggleTheme, setLightTheme, setDarkTheme, setSystemTheme, isDark } = useTheme();
+    const { can, isAdmin } = usePermissions();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     
@@ -56,13 +59,15 @@ export default function AuthenticatedLayout({ header, children }) {
         localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
     }, [sidebarCollapsed]);
 
+    // Navegación principal - filtrada por permisos
     const navigation = [
-        { name: 'Dashboard', href: route('dashboard'), icon: LayoutDashboard, current: route().current('dashboard') },
-        { name: 'Categorías', href: route('categories.index'), icon: FolderTree, current: route().current('categories.*') },
-        { name: 'Proveedores', href: route('suppliers.index'), icon: Truck, current: route().current('suppliers.*') },
-        { name: 'Productos', href: route('products.index'), icon: Package, current: route().current('products.*'), badge: lowStockCount > 0 ? lowStockCount : null, badgeType: 'warning' },
-        { name: 'Movimientos', href: route('stock-movements.index'), icon: ArrowLeftRight, current: route().current('stock-movements.*') },
-    ];
+        { name: 'Dashboard', href: route('dashboard'), icon: LayoutDashboard, current: route().current('dashboard'), permission: 'dashboard.view' },
+        { name: 'Categorías', href: route('categories.index'), icon: FolderTree, current: route().current('categories.*'), permission: 'categories.view' },
+        { name: 'Proveedores', href: route('suppliers.index'), icon: Truck, current: route().current('suppliers.*'), permission: 'suppliers.view' },
+        { name: 'Productos', href: route('products.index'), icon: Package, current: route().current('products.*'), badge: lowStockCount > 0 ? lowStockCount : null, badgeType: 'warning', permission: 'products.view' },
+        { name: 'Movimientos', href: route('stock-movements.index'), icon: ArrowLeftRight, current: route().current('stock-movements.*'), permission: 'movements.view' },
+        { name: 'Usuarios', href: route('users.index'), icon: Users, current: route().current('users.*'), permission: 'users.view' },
+    ].filter(item => can(item.permission));
 
     // Ancho del sidebar según estado
     const sidebarWidth = sidebarCollapsed ? 'w-20' : 'w-72';
@@ -176,18 +181,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </div>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
-                                        onClick={() => {
-                                            const form = document.createElement('form');
-                                            form.method = 'POST';
-                                            form.action = route('logout');
-                                            const csrf = document.createElement('input');
-                                            csrf.type = 'hidden';
-                                            csrf.name = '_token';
-                                            csrf.value = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-                                            form.appendChild(csrf);
-                                            document.body.appendChild(form);
-                                            form.submit();
-                                        }}
+                                        onClick={() => router.post(route('logout'))}
                                         className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
                                     >
                                         <LogOut className="h-4 w-4" />
@@ -204,7 +198,7 @@ export default function AuthenticatedLayout({ header, children }) {
             <div className={`hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:flex-col transition-all duration-300 ${sidebarWidth}`}>
                 <div className="flex h-full flex-col bg-sidebar">
                     {/* Logo */}
-                    <div className={`flex h-16 shrink-0 items-center border-b border-sidebar-border ${sidebarCollapsed ? 'justify-center px-2' : 'gap-3 px-6'}`}>
+                    <div className={`flex h-16 shrink-0 items-center border-b border-sidebar-border ${sidebarCollapsed ? 'justify-center px-3' : 'gap-3 px-6'}`}>
                         <Link href="/" className={`flex items-center ${sidebarCollapsed ? '' : 'gap-3'}`}>
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-glow">
                                 <Package className="h-6 w-6 text-white" />
@@ -219,7 +213,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
 
                     {/* Navegación */}
-                    <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-1">
+                    <nav className={`flex-1 overflow-y-auto py-6 space-y-1 ${sidebarCollapsed ? 'px-3' : 'px-3'}`}>
                         {!sidebarCollapsed && (
                             <p className="px-3 text-xs font-semibold text-sidebar-foreground/40 uppercase tracking-wider mb-3">
                                 Menú Principal
@@ -231,7 +225,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                 href={item.href}
                                 title={sidebarCollapsed ? item.name : undefined}
                                 className={`group relative flex items-center rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer select-none ${
-                                    sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-4 py-3'
+                                    sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-3 py-3'
                                 } ${
                                     item.current
                                         ? 'bg-sidebar-accent text-sidebar-primary sidebar-item-active'
@@ -261,11 +255,11 @@ export default function AuthenticatedLayout({ header, children }) {
                     </nav>
 
                     {/* Botón colapsar */}
-                    <div className={`shrink-0 border-t border-sidebar-border ${sidebarCollapsed ? 'p-2' : 'p-3'}`}>
+                    <div className={`shrink-0 border-t border-sidebar-border ${sidebarCollapsed ? 'px-3 py-3' : 'px-4 py-3'}`}>
                         <button
                             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                             className={`flex items-center rounded-xl text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-all ${
-                                sidebarCollapsed ? 'w-full justify-center p-3' : 'w-full gap-3 px-4 py-2.5'
+                                sidebarCollapsed ? 'w-full justify-center p-3' : 'w-full gap-3 px-3 py-2.5'
                             }`}
                             title={sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'}
                         >
@@ -281,7 +275,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
 
                     {/* Usuario en sidebar desktop */}
-                    <div className={`shrink-0 border-t border-sidebar-border ${sidebarCollapsed ? 'p-2' : 'p-4'}`}>
+                    <div className={`shrink-0 border-t border-sidebar-border ${sidebarCollapsed ? 'px-3 py-3' : 'px-4 py-3'}`}>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button className={`flex items-center rounded-xl bg-sidebar-accent/30 hover:bg-sidebar-accent/50 transition-colors ${
@@ -335,18 +329,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                 </div>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    onClick={() => {
-                                        const form = document.createElement('form');
-                                        form.method = 'POST';
-                                        form.action = route('logout');
-                                        const csrf = document.createElement('input');
-                                        csrf.type = 'hidden';
-                                        csrf.name = '_token';
-                                        csrf.value = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-                                        form.appendChild(csrf);
-                                        document.body.appendChild(form);
-                                        form.submit();
-                                    }}
+                                    onClick={() => router.post(route('logout'))}
                                     className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
                                 >
                                     <LogOut className="h-4 w-4" />
@@ -498,18 +481,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </div>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
-                                        onClick={() => {
-                                            const form = document.createElement('form');
-                                            form.method = 'POST';
-                                            form.action = route('logout');
-                                            const csrf = document.createElement('input');
-                                            csrf.type = 'hidden';
-                                            csrf.name = '_token';
-                                            csrf.value = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-                                            form.appendChild(csrf);
-                                            document.body.appendChild(form);
-                                            form.submit();
-                                        }}
+                                        onClick={() => router.post(route('logout'))}
                                         className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
                                     >
                                         <LogOut className="h-4 w-4" />

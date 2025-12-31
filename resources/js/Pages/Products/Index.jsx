@@ -27,11 +27,13 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Plus, MoreHorizontal, Pencil, Trash2, Package, AlertTriangle, Search, X, ChevronLeft, ChevronRight, Eye, Download } from 'lucide-react';
+import { usePermissions } from '@/hooks/usePermissions';
 
 /**
  * Página de listado de productos.
  */
 export default function Index({ products, categories, suppliers, filters }) {
+    const { can } = usePermissions();
     const [search, setSearch] = useState(filters.search || '');
     const [category, setCategory] = useState(filters.category || '');
     const [supplier, setSupplier] = useState(filters.supplier || '');
@@ -130,28 +132,32 @@ export default function Index({ products, categories, suppliers, filters }) {
                         </div>
                     </div>
                     <div className="flex gap-2 shrink-0">
-                        <a
-                            href={route('export.products', {
-                                search: filters.search || undefined,
-                                category: filters.category || undefined,
-                                supplier: filters.supplier || undefined,
-                                status: filters.status !== '' ? filters.status : undefined,
-                                low_stock: filters.low_stock || undefined,
-                            })}
-                            className="hidden sm:block"
-                        >
-                            <Button variant="outline" className="gap-2">
-                                <Download className="h-4 w-4" />
-                                Exportar CSV
-                            </Button>
-                        </a>
-                        <Link href={route('products.create')}>
-                            <Button className="gap-2">
-                                <Plus className="h-4 w-4" />
-                                <span className="hidden sm:inline">Nuevo Producto</span>
-                                <span className="sm:hidden">Nuevo</span>
-                            </Button>
-                        </Link>
+                        {can('products.export') && (
+                            <a
+                                href={route('export.products', {
+                                    search: filters.search || undefined,
+                                    category: filters.category || undefined,
+                                    supplier: filters.supplier || undefined,
+                                    status: filters.status !== '' ? filters.status : undefined,
+                                    low_stock: filters.low_stock || undefined,
+                                })}
+                                className="hidden sm:block"
+                            >
+                                <Button variant="outline" className="gap-2">
+                                    <Download className="h-4 w-4" />
+                                    Exportar CSV
+                                </Button>
+                            </a>
+                        )}
+                        {can('products.create') && (
+                            <Link href={route('products.create')}>
+                                <Button className="gap-2">
+                                    <Plus className="h-4 w-4" />
+                                    <span className="hidden sm:inline">Nuevo Producto</span>
+                                    <span className="sm:hidden">Nuevo</span>
+                                </Button>
+                            </Link>
+                        )}
                     </div>
                 </div>
             }
@@ -354,20 +360,24 @@ export default function Index({ products, categories, suppliers, filters }) {
                                                                 <Eye className="h-4 w-4" />
                                                                 Ver detalle
                                                             </DropdownMenuItem>
-                                                            <DropdownMenuItem
-                                                                onClick={() => router.visit(route('products.edit', product.id))}
-                                                                className="gap-2"
-                                                            >
-                                                                <Pencil className="h-4 w-4" />
-                                                                Editar
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuItem
-                                                                onClick={() => handleDelete(product)}
-                                                                className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
-                                                            >
-                                                                <Trash2 className="h-4 w-4" />
-                                                                Eliminar
-                                                            </DropdownMenuItem>
+                                                            {can('products.edit') && (
+                                                                <DropdownMenuItem
+                                                                    onClick={() => router.visit(route('products.edit', product.id))}
+                                                                    className="gap-2"
+                                                                >
+                                                                    <Pencil className="h-4 w-4" />
+                                                                    Editar
+                                                                </DropdownMenuItem>
+                                                            )}
+                                                            {can('products.delete') && (
+                                                                <DropdownMenuItem
+                                                                    onClick={() => handleDelete(product)}
+                                                                    className="gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+                                                                >
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                    Eliminar
+                                                                </DropdownMenuItem>
+                                                            )}
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>
                                                 </TableCell>

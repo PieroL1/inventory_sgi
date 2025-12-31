@@ -19,11 +19,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Usuario de prueba para desarrollo
-        User::factory()->create([
+        // Primero crear roles y permisos
+        $this->call(RolePermissionSeeder::class);
+
+        // Usuario admin de prueba
+        $admin = User::factory()->create([
             'name' => 'Admin SGI',
             'email' => 'admin@sgi.test',
         ]);
+        $admin->assignRole('admin');
+
+        // Usuario operador de prueba
+        $operator = User::factory()->create([
+            'name' => 'Operador SGI',
+            'email' => 'operador@sgi.test',
+        ]);
+        $operator->assignRole('operator');
+
+        // Usuario viewer de prueba
+        $viewer = User::factory()->create([
+            'name' => 'Viewer SGI',
+            'email' => 'viewer@sgi.test',
+        ]);
+        $viewer->assignRole('viewer');
 
         // Crear categorías principales
         $categories = Category::factory(5)->create();
